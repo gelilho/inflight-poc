@@ -1,0 +1,4 @@
+airport_code,city,country,timezone,police,ambulance,fire
+FCO,Rome,Italy,Europe/Rome,112,118,115
+LHR,London,United Kingdom,Europe/London,999,999,999
+CDG,Paris,France,Europe/Paris,17,15,18

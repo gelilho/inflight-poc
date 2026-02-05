@@ -1,0 +1,3 @@
+flight_number,aircraft_model,registration,age_years,captain_first,captain_last,fo_first,fo_last,crew1_first,crew1_last,crew2_first,crew2_last,crew3_first,crew3_last,avg_duration_min,departure_gate,baggage_belt
+VY71299,Airbus A320-200,EC-MXY,9,Laura,Rossi,Marco,Bianchi,Sofia,Conti,Elena,Greco,Paolo,Ricci,105,B23,Carousel 5
+IB3421,Boeing 737-800,EC-LKM,12,Carlos,Martinez,Ana,Rodriguez,Luis,Fernandez,Carmen,Torres,Miguel,Sanchez,150,T4-A12,Belt 3

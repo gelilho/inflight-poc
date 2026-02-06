@@ -32,7 +32,11 @@ class CSVDataLoader:
     
     def get_booking(self, booking_number: str) -> Optional[Booking]:
         """Load booking data by booking number (PNR)"""
-        df = pd.read_csv(self.data_dir / "bookings.csv")
+        # FORCE STRING TYPE FOR DATE COLUMN
+        df = pd.read_csv(
+            self.data_dir / "bookings.csv",
+            dtype={"flight_date": str}  # CRITICAL FIX
+        )
         row = df[df["booking_number"] == booking_number]
         
         if row.empty:
@@ -43,7 +47,7 @@ class CSVDataLoader:
             booking_number=row["booking_number"],
             user_id=row["user_id"],
             flight_number=row["flight_number"],
-            flight_date=row["flight_date"],
+            flight_date=str(row["flight_date"]),  # Force string
             seat=row["seat"],
             origin=row["origin"],
             origin_airport_name=row["origin_airport_name"],
@@ -56,7 +60,11 @@ class CSVDataLoader:
     
     def get_bookings_by_user(self, user_id: str) -> List[Booking]:
         """Get all bookings for a user"""
-        df = pd.read_csv(self.data_dir / "bookings.csv")
+        # FORCE STRING TYPE FOR DATE COLUMN
+        df = pd.read_csv(
+            self.data_dir / "bookings.csv",
+            dtype={"flight_date": str}  # CRITICAL FIX
+        )
         rows = df[df["user_id"] == user_id]
         
         bookings = []
@@ -65,7 +73,7 @@ class CSVDataLoader:
                 booking_number=row["booking_number"],
                 user_id=row["user_id"],
                 flight_number=row["flight_number"],
-                flight_date=row["flight_date"],
+                flight_date=str(row["flight_date"]),  # Force string
                 seat=row["seat"],
                 origin=row["origin"],
                 origin_airport_name=row["origin_airport_name"],
@@ -80,7 +88,15 @@ class CSVDataLoader:
     
     def get_flight(self, flight_number: str, flight_date: str) -> Optional[Flight]:
         """Load flight data for specific date"""
-        df = pd.read_csv(self.data_dir / "flights.csv")
+        # FORCE STRING TYPE FOR DATE COLUMN
+        df = pd.read_csv(
+            self.data_dir / "flights.csv",
+            dtype={"flight_date": str}  # CRITICAL FIX
+        )
+        
+        # Ensure flight_date is string for comparison
+        flight_date = str(flight_date)
+        
         row = df[(df["flight_number"] == flight_number) & (df["flight_date"] == flight_date)]
         
         if row.empty:
@@ -89,7 +105,7 @@ class CSVDataLoader:
         row = row.iloc[0]
         return Flight(
             flight_number=row["flight_number"],
-            flight_date=row["flight_date"],
+            flight_date=str(row["flight_date"]),  # Force string
             departure_time=row["departure_time"],
             arrival_time=row["arrival_time"],
             origin=row["origin"],

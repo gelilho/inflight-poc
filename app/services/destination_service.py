@@ -7,6 +7,7 @@ from app.models.schemas import (
 )
 from app.adapters.gemini_adapter import gemini_adapter
 from app.adapters.weather_adapter import weather_adapter
+from app.adapters.news_adapter import news_adapter
 from data.loaders.csv_loader import csv_loader
 from typing import List
 import logging
@@ -18,12 +19,10 @@ class DestinationService:
     """Service for destination content operations"""
     
     def get_destination_content(self, airport_code: str, language: str = "en") -> DestinationContent:
-        """
-        Get complete destination content (highlights, restaurants, transport, emergency)
-        """
+        """Get complete destination content"""
         logger.info(f"Fetching destination content: {airport_code} in {language}")
         
-        # Get destination info and emergency contacts from CSV
+        # Get destination info from CSV
         dest_info = csv_loader.get_destination_info(airport_code)
         if not dest_info:
             raise ValueError(f"Destination not found: {airport_code}")
@@ -31,21 +30,19 @@ class DestinationService:
         destination = dest_info["destination"]
         emergency_contacts = dest_info["emergency_contacts"]
         
-        # Generate highlights (base language)
+        # Generate content with Gemini
         highlights_data = gemini_adapter.generate_highlights(
             destination.city,
             destination.country
         )
         highlights = [Highlight(**h) for h in highlights_data]
         
-        # Generate restaurants (base language)
         restaurants_data = gemini_adapter.generate_restaurants(
             destination.city,
             destination.country
         )
         restaurants = [Restaurant(**r) for r in restaurants_data]
         
-        # Generate transport options (base language)
         transport_data = gemini_adapter.generate_airport_transport(
             destination.city,
             airport_code
@@ -56,7 +53,7 @@ class DestinationService:
             options=transport_options
         )
         
-        # Build destination content
+        # Build content
         content = DestinationContent(
             destination=destination,
             highlights=highlights,
@@ -72,18 +69,16 @@ class DestinationService:
         return content
     
     def get_weather(self, airport_code: str, language: str = "en") -> List[WeatherForecast]:
-        """Get 3-day weather forecast"""
+        """Get weather forecast using real API"""
         logger.info(f"Fetching weather: {airport_code} in {language}")
         
         weather_data = weather_adapter.get_forecast(airport_code, days=3)
         forecasts = [WeatherForecast(**w) for w in weather_data]
         
-        # TODO: Translate weather conditions if needed
-        
         return forecasts
     
     def get_news(self, airport_code: str, language: str = "en") -> List[LocalNews]:
-        """Get local news headlines"""
+        """Get local news using real API or Gemini fallback"""
         logger.info(f"Fetching news: {airport_code} in {language}")
         
         dest_info = csv_loader.get_destination_info(airport_code)
@@ -91,7 +86,9 @@ class DestinationService:
             raise ValueError(f"Destination not found: {airport_code}")
         
         destination = dest_info["destination"]
-        news_data = gemini_adapter.generate_mock_news(destination.city)
+        
+        # Try real news API first
+        news_data = news_adapter.get_local_news(destination.city, limit=5)
         news_items = [LocalNews(**n) for n in news_data]
         
         # Translate if needed
@@ -109,14 +106,14 @@ class DestinationService:
         return news_items
     
     def _translate_content(self, content: DestinationContent, language: str) -> DestinationContent:
-        """Translate destination content to target language"""
+        """Translate content"""
         try:
             content_dict = content.model_dump()
             translated = gemini_adapter.translate_content(content_dict, language)
             return DestinationContent(**translated)
         except Exception as e:
             logger.error(f"Translation failed: {e}")
-            return content  # Fallback to base language
+            return content
 
 
 # Singleton instance

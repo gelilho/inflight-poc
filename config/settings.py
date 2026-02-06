@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     news_api_key: Optional[str] = None
     
     # Feature Flags
-    use_mock_data: bool = True
+    use_mock_data: bool = False  # Changed to False - use real APIs when available
     enable_translation: bool = True
     enable_weather: bool = True
     enable_news: bool = True

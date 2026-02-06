@@ -40,6 +40,11 @@ async def root():
         "version": "2.0.0",
         "documentation": "/docs",
         "supported_languages": SUPPORTED_LANGUAGES,
+        "data_sources": {
+            "ai_content": "Google Gemini 2.5 Flash",
+            "weather": "OpenWeatherMap API (fallback: mock data)",
+            "news": "NewsAPI.org (fallback: Gemini-generated)"
+        },
         "endpoints": {
             "passenger": "/api/v1/passenger/{user_id}",
             "passenger_bookings": "/api/v1/passenger/{user_id}/bookings",
@@ -155,6 +160,7 @@ async def get_flight(
     Get flight operational details for a specific date.
     
     **Date format: YYYYMMDD (e.g., 20260207)**
+    
     **Date-specific because crew, aircraft, and gates change daily.**
     
     Returns:
@@ -179,7 +185,7 @@ async def get_flight(
 @router.get(
     "/api/v1/destination/{airport_code}/content/{language}",
     response_model=DestinationContent,
-    summary="Get destination content"
+    summary="Get destination content (AI-generated)"
 )
 async def get_destination_content(
     airport_code: str = Path(..., description="Airport code", example="FCO"),
@@ -193,9 +199,11 @@ async def get_destination_content(
     - Top 3 restaurants (with brief + long descriptions)
     - Airport transport options
     
-    All content translated to specified language.
+    **Data Source:** Google Gemini 2.5 Flash (AI-generated)
     
-    **Note: First call may take 10-20 seconds as Gemini generates content.**
+    **Translation:** All content translated to specified language
+    
+    **Note:** First call may take 10-20 seconds as AI generates content.
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -222,7 +230,17 @@ async def get_weather(
     airport_code: str = Path(..., description="Airport code", example="FCO"),
     language: str = Path(..., description="Language code", example="en")
 ):
-    """Get 3-day weather forecast for destination."""
+    """
+    Get 3-day weather forecast for destination.
+    
+    **Data Source:** 
+    - Primary: OpenWeatherMap API (real weather data)
+    - Fallback: Mock data (if API unavailable or key invalid)
+    
+    **Translation:** Weather conditions translated to specified language
+    
+    Returns: 3-day forecast with min/max temperatures (°C) and conditions
+    """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
             status_code=400,
@@ -239,18 +257,29 @@ async def get_weather(
 @router.get(
     "/api/v1/destination/{airport_code}/news/{language}",
     response_model=List[LocalNews],
-    summary="Get local news"
+    summary="Get local news headlines"
 )
 async def get_news(
     airport_code: str = Path(..., description="Airport code", example="FCO"),
     language: str = Path(..., description="Language code", example="it")
 ):
     """
-    Get 5 local news headlines.
+    Get 5 local news headlines for destination.
     
-    News includes brief + long descriptions, filtered for inflight safety.
+    **Data Source:**
+    - Primary: NewsAPI.org (real news articles from last 7 days)
+    - Filtering: Python code filters out dramatic/violent content for inflight safety
+    - Fallback: Google Gemini generates safe, relevant news (if API unavailable)
     
-    **Note: First call may take 10-15 seconds as Gemini generates content.**
+    **Translation:** All news content translated to specified language
+    
+    **Content Safety:** 
+    - Excludes: violence, crime, disasters, terrorism
+    - Includes: sports, culture, events, local interest
+    
+    Returns: 5 news items with title, brief + long descriptions, and category
+    
+    **Note:** First call may take 10-15 seconds if using Gemini fallback.
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -272,7 +301,7 @@ async def get_news(
 @router.get(
     "/api/v1/inflight-experience/{booking_number}/{language}",
     response_model=InflightExperience,
-    summary="Complete inflight experience"
+    summary="Complete inflight experience (BIG FLOW)"
 )
 async def get_inflight_experience(
     booking_number: str = Path(..., description="Booking number (PNR)", example="VY4K7M"),
@@ -284,15 +313,20 @@ async def get_inflight_experience(
     Combines:
     - Booking details (seat, baggage, airports)
     - Flight details (aircraft, crew, gates)
-    - Destination content (highlights, restaurants, emergency contacts)
-    - Weather forecast (3 days)
-    - Local news (5 headlines)
+    - Destination content (highlights, restaurants, emergency contacts) - AI-generated
+    - Weather forecast (OpenWeatherMap or mock)
+    - Local news (NewsAPI or Gemini fallback)
     
-    Everything translated to specified language.
+    **Data Sources:**
+    - AI Content: Google Gemini 2.5 Flash
+    - Weather: OpenWeatherMap API (fallback: mock)
+    - News: NewsAPI.org (fallback: Gemini)
+    
+    **Translation:** All content in specified language
     
     **Perfect for the full passenger experience.**
     
-    **Note: First call may take 30-45 seconds as Gemini generates all content.**
+    **Note:** First call may take 30-45 seconds as content is generated.
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(

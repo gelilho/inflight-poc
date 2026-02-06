@@ -1,4 +1,4 @@
-airport_code,city,country,timezone,police,ambulance,fire
-FCO,Rome,Italy,Europe/Rome,112,118,115
-LHR,London,United Kingdom,Europe/London,999,999,999
-CDG,Paris,France,Europe/Paris,17,15,18
+airport_code,city,country,timezone,police,ambulance,fire,radio_taxi,airport_info,vueling_contact
+FCO,Rome,Italy,Europe/Rome,"112","118","115","+39 06 3570","+39 06 65951","+34 931 518 158"
+LHR,London,United Kingdom,Europe/London,"999","999","999","+44 20 7272 0272","+44 844 335 1801","+34 931 518 158"
+CDG,Paris,France,Europe/Paris,"17","15","18","+33 1 45 85 85 85","+33 1 70 36 39 50","+34 931 518 158"

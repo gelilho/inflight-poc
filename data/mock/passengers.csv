@@ -1,4 +1,4 @@
-user_id,first_name,last_name,seat,flight_number,origin,destination
-P001,Angel,Lopez,14D,VY71299,BCN,FCO
-P002,Maria,Garcia,12A,VY71299,BCN,FCO
-P003,John,Smith,8C,IB3421,MAD,LHR
+user_id,first_name,last_name,frequent_flyer_number,preferred_language
+P001,Angel,Lopez,VY123456789,es
+P002,Maria,Garcia,VY987654321,es
+P003,John,Smith,VY555444333,en

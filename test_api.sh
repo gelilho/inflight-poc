@@ -27,13 +27,13 @@ echo "3️⃣  Booking Details (PNR: VY4K7M)"
 curl -s $BASE_URL/api/v1/booking/VY4K7M | jq '.'
 echo ""
 
-# Flight
-echo "4️⃣  Flight Details (VY71299 on 2026-02-07)"
-curl -s $BASE_URL/api/v1/flight/VY71299/2026-02-07 | jq '.aircraft, .cockpit_crew'
+# Flight (FIXED DATE FORMAT)
+echo "4️⃣  Flight Details (VY71299 on 20260207)"
+curl -s $BASE_URL/api/v1/flight/VY71299/20260207 | jq '.aircraft, .cockpit_crew'
 echo ""
 
-# Destination content
-echo "5️⃣  Destination Content (Rome - Spanish)"
+# Destination content (this will take 10-20 seconds)
+echo "5️⃣  Destination Content (Rome - Spanish) - may take 10-20 sec..."
 curl -s $BASE_URL/api/v1/destination/FCO/content/es | jq '.destination, .highlights[0].title, .restaurants[0].name'
 echo ""
 
@@ -42,20 +42,12 @@ echo "6️⃣  Weather (Rome - English)"
 curl -s $BASE_URL/api/v1/destination/FCO/weather/en | jq '.'
 echo ""
 
-# News
-echo "7️⃣  News (Rome - Italian)"
+# News (this will take 10-15 seconds)
+echo "7️⃣  News (Rome - Italian) - may take 10-15 sec..."
 curl -s $BASE_URL/api/v1/destination/FCO/news/it | jq '.[0].title'
 echo ""
 
-# Complete experience
-echo "8️⃣  Complete Inflight Experience (Booking VY4K7M - Spanish)"
-curl -s $BASE_URL/api/v1/inflight-experience/VY4K7M/es | jq '.booking.seat, .flight.aircraft.aircraft_name, .destination_content.destination.city'
+echo "✅ Quick tests complete!"
 echo ""
-
-echo "✅ All tests complete!"
-echo ""
-echo "💡 Try these commands:"
-echo "   curl $BASE_URL/api/v1/booking/VY4K7M | jq '.'"
-echo "   curl $BASE_URL/api/v1/flight/VY71299/2026-02-07 | jq '.'"
-echo "   curl $BASE_URL/api/v1/destination/FCO/content/es | jq '.'"
+echo "💡 Try the BIG FLOW (will take 30-45 sec):"
 echo "   curl $BASE_URL/api/v1/inflight-experience/VY4K7M/es | jq '.' > experience.json"

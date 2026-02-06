@@ -1,4 +1,4 @@
 flight_number,flight_date,departure_time,arrival_time,origin,destination,aircraft_model,registration,age_years,aircraft_name,captain_first,captain_last,fo_first,fo_last,crew1_first,crew1_last,crew2_first,crew2_last,crew3_first,crew3_last,avg_duration_min,departure_gate,baggage_belt
-VY71299,2026-02-07,14:30,16:15,BCN,FCO,Airbus A320-200,EC-MXY,9,Spirit of Barcelona,Laura,Rossi,Marco,Bianchi,Sofia,Conti,Elena,Greco,Paolo,Ricci,105,B23,Carousel 5
-VY71299,2026-02-08,14:30,16:15,BCN,FCO,Airbus A320-200,EC-LTM,7,Costa Brava,Carlos,Gomez,Ana,Martinez,Luis,Fernandez,Carmen,Torres,Miguel,Sanchez,105,B24,Carousel 4
-IB3421,2026-02-08,09:15,10:45,MAD,LHR,Boeing 737-800,EC-LKM,12,Mediterranean Dream,Roberto,Silva,Patricia,Ruiz,Alberto,Morales,Lucia,Navarro,Jorge,Delgado,90,T4-A12,Belt 3
+VY71299,20260207,14:30,16:15,BCN,FCO,Airbus A320-200,EC-MXY,9,Spirit of Barcelona,Laura,Rossi,Marco,Bianchi,Sofia,Conti,Elena,Greco,Paolo,Ricci,105,B23,Carousel 5
+VY71299,20260208,14:30,16:15,BCN,FCO,Airbus A320-200,EC-LTM,7,Costa Brava,Carlos,Gomez,Ana,Martinez,Luis,Fernandez,Carmen,Torres,Miguel,Sanchez,105,B24,Carousel 4
+IB3421,20260208,09:15,10:45,MAD,LHR,Boeing 737-800,EC-LKM,12,Mediterranean Dream,Roberto,Silva,Patricia,Ruiz,Alberto,Morales,Lucia,Navarro,Jorge,Delgado,90,T4-A12,Belt 3

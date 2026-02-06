@@ -53,7 +53,7 @@ async def root():
         "examples": {
             "passenger": "/api/v1/passenger/P001",
             "booking": "/api/v1/booking/VY4K7M",
-            "flight": "/api/v1/flight/VY71299/2026-02-07",
+            "flight": "/api/v1/flight/VY71299/20260207",
             "destination_rome_spanish": "/api/v1/destination/FCO/content/es",
             "weather_rome": "/api/v1/destination/FCO/weather/en",
             "news_rome": "/api/v1/destination/FCO/news/it",
@@ -149,11 +149,12 @@ async def get_booking(
 )
 async def get_flight(
     flight_number: str = Path(..., description="Flight number", example="VY71299"),
-    date: str = Path(..., description="Flight date (YYYY-MM-DD)", example="2026-02-07")
+    date: str = Path(..., description="Flight date (YYYYMMDD)", example="20260207")
 ):
     """
     Get flight operational details for a specific date.
     
+    **Date format: YYYYMMDD (e.g., 20260207)**
     **Date-specific because crew, aircraft, and gates change daily.**
     
     Returns:
@@ -193,6 +194,8 @@ async def get_destination_content(
     - Airport transport options
     
     All content translated to specified language.
+    
+    **Note: First call may take 10-20 seconds as Gemini generates content.**
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -201,12 +204,13 @@ async def get_destination_content(
         )
     
     try:
+        logger.info(f"Starting destination content generation for {airport_code} in {language}")
         return destination_service.get_destination_content(airport_code, language)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        logger.error(f"Error fetching destination content: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.error(f"Error fetching destination content: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 @router.get(
@@ -245,6 +249,8 @@ async def get_news(
     Get 5 local news headlines.
     
     News includes brief + long descriptions, filtered for inflight safety.
+    
+    **Note: First call may take 10-15 seconds as Gemini generates content.**
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -255,8 +261,8 @@ async def get_news(
     try:
         return destination_service.get_news(airport_code, language)
     except Exception as e:
-        logger.error(f"Error fetching news: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch news")
+        logger.error(f"Error fetching news: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to fetch news: {str(e)}")
 
 
 # ============================================================
@@ -285,6 +291,8 @@ async def get_inflight_experience(
     Everything translated to specified language.
     
     **Perfect for the full passenger experience.**
+    
+    **Note: First call may take 30-45 seconds as Gemini generates all content.**
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -293,9 +301,10 @@ async def get_inflight_experience(
         )
     
     try:
+        logger.info(f"Starting BIG FLOW for {booking_number} in {language}")
         return inflight_service.get_inflight_experience(booking_number, language)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        logger.error(f"Error generating inflight experience: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.error(f"Error generating inflight experience: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")

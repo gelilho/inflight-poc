@@ -1,4 +1,4 @@
-# Environment files
+# Environment files - NEVER COMMIT THESE!
 .env
 .env.*
 !.env.template
@@ -16,6 +16,7 @@ dist/
 build/
 venv/
 .venv/
+*.log
 
 # IDE
 .vscode/
@@ -24,9 +25,27 @@ venv/
 *.swo
 *~
 
-# Logs
-*.log
-
 # OS
 .DS_Store
 Thumbs.db
+
+# Test artifacts
+test_gemini.py
+test_gemini_adapter.py
+test_model.py
+test_working_model.py
+list_models.py
+inflight_experience_demo.json
+experience.json
+full_experience.json
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Test output files
+demo_*.json
+experience.json
+full_experience.json

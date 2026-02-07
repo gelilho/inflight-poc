@@ -4,8 +4,8 @@ These tests hit the REAL external APIs to verify keys and connectivity.
 Mark with @pytest.mark.live so they can be skipped in CI with: pytest -m "not live"
 """
 
-import os
 import pytest
+from config.settings import get_settings
 
 # Mark all tests in this module as "live" (real API calls)
 pytestmark = pytest.mark.live
@@ -18,10 +18,10 @@ pytestmark = pytest.mark.live
 class TestGeminiApiIntegration:
 
     def test_gemini_api_key_is_configured(self):
-        """Gemini API key must be present in environment"""
-        key = os.getenv("GEMINI_API_KEY")
-        assert key is not None, "GEMINI_API_KEY not found in .env"
-        assert len(key) > 10, "GEMINI_API_KEY looks too short"
+        """Gemini API key must be present in settings"""
+        settings = get_settings()
+        assert settings.gemini_api_key is not None, "GEMINI_API_KEY not configured"
+        assert len(settings.gemini_api_key) > 10, "GEMINI_API_KEY looks too short"
 
     def test_gemini_generates_highlights(self):
         """Real Gemini call — generate 5 highlights for Rome"""

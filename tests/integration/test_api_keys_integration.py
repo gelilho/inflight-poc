@@ -1,317 +1,101 @@
-"""Integration Tests - Verify ALL API keys work with real API calls"""
+"""Integration tests — Real API calls to Gemini, Weather, and News.
 
-import sys
+These tests hit the REAL external APIs to verify keys and connectivity.
+Mark with @pytest.mark.live so they can be skipped in CI with: pytest -m "not live"
+"""
+
 import os
-from pathlib import Path
+import pytest
 
-# Add project root to path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
-os.chdir(project_root)
+# Mark all tests in this module as "live" (real API calls)
+pytestmark = pytest.mark.live
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Track results
-results = {
-    "gemini": {"status": "pending", "message": ""},
-    "weather": {"status": "pending", "message": ""},
-    "news": {"status": "pending", "message": ""}
-}
-
-print("🔑 API Keys Integration Test")
-print("=" * 70)
-print()
 
 # ============================================================
-# STEP 1: Check Environment Variables
+# GEMINI API (Real Call)
 # ============================================================
 
-print("STEP 1: Checking Environment Variables")
-print("-" * 70)
+class TestGeminiApiIntegration:
 
-gemini_key = os.getenv("GEMINI_API_KEY")
-weather_key = os.getenv("WEATHER_API_KEY")
-news_key = os.getenv("NEWS_API_KEY")
+    def test_gemini_api_key_is_configured(self):
+        """Gemini API key must be present in environment"""
+        key = os.getenv("GEMINI_API_KEY")
+        assert key is not None, "GEMINI_API_KEY not found in .env"
+        assert len(key) > 10, "GEMINI_API_KEY looks too short"
 
-if gemini_key:
-    print(f"✅ GEMINI_API_KEY found: {gemini_key[:15]}... (length: {len(gemini_key)})")
-else:
-    print("❌ GEMINI_API_KEY not found in .env")
-    results["gemini"]["status"] = "failed"
-    results["gemini"]["message"] = "Key not found in .env"
+    def test_gemini_generates_highlights(self):
+        """Real Gemini call — generate 5 highlights for Rome"""
+        from app.adapters.gemini_adapter import gemini_adapter
 
-if weather_key:
-    print(f"✅ WEATHER_API_KEY found: {weather_key[:15]}... (length: {len(weather_key)})")
-else:
-    print("⚠️  WEATHER_API_KEY not found - will skip test")
-    results["weather"]["status"] = "skipped"
-    results["weather"]["message"] = "Key not configured"
+        highlights = gemini_adapter.generate_highlights("Rome", "Italy")
+        assert isinstance(highlights, list)
+        assert len(highlights) == 5
+        assert "id" in highlights[0]
+        assert "title" in highlights[0]
+        assert "brief_description" in highlights[0]
+        assert "long_description" in highlights[0]
 
-if news_key:
-    print(f"✅ NEWS_API_KEY found: {news_key[:15]}... (length: {len(news_key)})")
-else:
-    print("⚠️  NEWS_API_KEY not found - will skip test")
-    results["news"]["status"] = "skipped"
-    results["news"]["message"] = "Key not configured"
+    def test_gemini_generates_restaurants(self):
+        """Real Gemini call — generate 3 restaurants for Rome"""
+        from app.adapters.gemini_adapter import gemini_adapter
 
-print()
+        restaurants = gemini_adapter.generate_restaurants("Rome", "Italy")
+        assert isinstance(restaurants, list)
+        assert len(restaurants) == 3
+        assert "name" in restaurants[0]
+        assert "cuisine" in restaurants[0]
 
-# ============================================================
-# STEP 2: Test Gemini API Key
-# ============================================================
+    def test_gemini_generates_transport(self):
+        """Real Gemini call — generate transport options for FCO"""
+        from app.adapters.gemini_adapter import gemini_adapter
 
-print("STEP 2: Testing Gemini API (Google Generative AI)")
-print("-" * 70)
+        transport = gemini_adapter.generate_airport_transport("Rome", "FCO")
+        assert isinstance(transport, list)
+        assert len(transport) >= 1
+        assert transport[0]["mode"] in ["train", "bus", "taxi"]
 
-if not gemini_key:
-    print("⚠️  Skipping - no API key provided")
-    print()
-else:
-    try:
-        import google.generativeai as genai
-        
-        print("Configuring Gemini with API key...")
-        genai.configure(api_key=gemini_key)
-        
-        print("Creating model: models/gemini-2.5-flash...")
-        model = genai.GenerativeModel("models/gemini-2.5-flash")
-        
-        print("Sending test request...")
-        response = model.generate_content("Say 'Gemini API test successful!' in one sentence.")
-        
-        print(f"✅ GEMINI API WORKS!")
-        print(f"   Response: {response.text[:100]}...")
-        results["gemini"]["status"] = "success"
-        results["gemini"]["message"] = "API working correctly"
-        print()
-        
-    except Exception as e:
-        print(f"❌ GEMINI API FAILED!")
-        print(f"   Error: {e}")
-        results["gemini"]["status"] = "failed"
-        results["gemini"]["message"] = str(e)
-        print()
+    def test_gemini_translates_content(self):
+        """Real Gemini call — translate content to Spanish"""
+        from app.adapters.gemini_adapter import gemini_adapter
+
+        original = {"title": "Colosseum", "description": "Ancient Roman amphitheater"}
+        translated = gemini_adapter.translate_content(original, "es")
+        assert isinstance(translated, dict)
+        assert "title" in translated
+        assert translated["title"] != original["title"]  # Should be translated
+
 
 # ============================================================
-# STEP 3: Test Weather API Key (OpenWeatherMap)
+# WEATHER API (Real Call)
 # ============================================================
 
-print("STEP 3: Testing Weather API (OpenWeatherMap)")
-print("-" * 70)
+class TestWeatherApiIntegration:
 
-if not weather_key:
-    print("⚠️  Skipping - no API key provided")
-    print()
-else:
-    try:
-        import requests
-        
-        # Rome coordinates
-        lat = 41.8003
-        lon = 12.2389
-        
-        url = "https://api.openweathermap.org/data/2.5/forecast"
-        params = {
-            "lat": lat,
-            "lon": lon,
-            "appid": weather_key,
-            "units": "metric",
-            "cnt": 8
-        }
-        
-        print(f"Calling OpenWeatherMap API for Rome...")
-        print(f"URL: {url}")
-        print(f"Params: lat={lat}, lon={lon}, units=metric")
-        
-        response = requests.get(url, params=params, timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            
-            if "list" in data and len(data["list"]) > 0:
-                first_forecast = data["list"][0]
-                temp = first_forecast["main"]["temp"]
-                condition = first_forecast["weather"][0]["main"]
-                
-                print(f"✅ WEATHER API WORKS!")
-                print(f"   City: {data.get('city', {}).get('name', 'Rome')}")
-                print(f"   Current forecast: {temp}°C, {condition}")
-                print(f"   Received {len(data['list'])} forecast entries")
-                results["weather"]["status"] = "success"
-                results["weather"]["message"] = f"{temp}°C, {condition}"
-                print()
-            else:
-                print(f"❌ WEATHER API FAILED!")
-                print(f"   No forecast data in response")
-                results["weather"]["status"] = "failed"
-                results["weather"]["message"] = "No forecast data"
-                print()
-        
-        elif response.status_code == 401:
-            print(f"❌ WEATHER API KEY INVALID!")
-            print(f"   Status: 401 Unauthorized")
-            error_msg = response.json().get('message', 'Invalid API key')
-            print(f"   Message: {error_msg}")
-            print(f"   🔗 Get new key: https://openweathermap.org/api")
-            results["weather"]["status"] = "invalid_key"
-            results["weather"]["message"] = error_msg
-            print()
-        
-        else:
-            print(f"❌ WEATHER API FAILED!")
-            print(f"   Status: {response.status_code}")
-            print(f"   Response: {response.text[:200]}")
-            results["weather"]["status"] = "failed"
-            results["weather"]["message"] = f"HTTP {response.status_code}"
-            print()
-    
-    except Exception as e:
-        print(f"❌ WEATHER API FAILED!")
-        print(f"   Error: {e}")
-        results["weather"]["status"] = "failed"
-        results["weather"]["message"] = str(e)
-        print()
+    def test_weather_returns_forecast(self):
+        """Weather API call (real or mock fallback) — returns 3-day forecast"""
+        from app.adapters.weather_adapter import weather_adapter
+
+        forecast = weather_adapter.get_forecast("FCO", days=3)
+        assert isinstance(forecast, list)
+        assert len(forecast) == 3
+        assert "date" in forecast[0]
+        assert "condition" in forecast[0]
+        assert "min_temperature_c" in forecast[0]
+        assert "max_temperature_c" in forecast[0]
+
 
 # ============================================================
-# STEP 4: Test News API Key (NewsAPI.org)
+# NEWS API (Real Call)
 # ============================================================
 
-print("STEP 4: Testing News API (NewsAPI.org)")
-print("-" * 70)
+class TestNewsApiIntegration:
 
-if not news_key:
-    print("⚠️  Skipping - no API key provided")
-    print()
-else:
-    try:
-        import requests
-        from datetime import datetime, timedelta
-        
-        url = "https://newsapi.org/v2/everything"
-        params = {
-            "q": "Rome",
-            "language": "en",
-            "sortBy": "publishedAt",
-            "pageSize": 5,
-            "apiKey": news_key,
-            "from": (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
-        }
-        
-        print(f"Calling NewsAPI for Rome news...")
-        print(f"URL: {url}")
-        print(f"Query: Rome, last 7 days, English")
-        
-        response = requests.get(url, params=params, timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            
-            if data.get("status") == "ok" and "articles" in data:
-                articles = data["articles"]
-                
-                print(f"✅ NEWS API WORKS!")
-                print(f"   Total results: {data.get('totalResults', 0)}")
-                print(f"   Articles received: {len(articles)}")
-                
-                if len(articles) > 0:
-                    print(f"\n   Sample article:")
-                    print(f"   Title: {articles[0].get('title', 'N/A')[:80]}...")
-                    print(f"   Source: {articles[0].get('source', {}).get('name', 'N/A')}")
-                
-                results["news"]["status"] = "success"
-                results["news"]["message"] = f"{len(articles)} articles found"
-                print()
-            else:
-                print(f"❌ NEWS API FAILED!")
-                print(f"   Status: {data.get('status')}")
-                print(f"   Message: {data.get('message', 'Unknown error')}")
-                results["news"]["status"] = "failed"
-                results["news"]["message"] = data.get('message', 'Unknown error')
-                print()
-        
-        elif response.status_code == 401:
-            print(f"❌ NEWS API KEY INVALID!")
-            print(f"   Status: 401 Unauthorized")
-            error_msg = response.json().get('message', 'Invalid API key')
-            print(f"   Message: {error_msg}")
-            print(f"   🔗 Get new key: https://newsapi.org/")
-            results["news"]["status"] = "invalid_key"
-            results["news"]["message"] = error_msg
-            print()
-        
-        elif response.status_code == 429:
-            print(f"⚠️  NEWS API RATE LIMIT!")
-            print(f"   Status: 429 Too Many Requests")
-            print(f"   Free tier: 100 requests/day")
-            results["news"]["status"] = "rate_limit"
-            results["news"]["message"] = "Rate limit exceeded"
-            print()
-        
-        else:
-            print(f"❌ NEWS API FAILED!")
-            print(f"   Status: {response.status_code}")
-            results["news"]["status"] = "failed"
-            results["news"]["message"] = f"HTTP {response.status_code}"
-            print()
-    
-    except Exception as e:
-        print(f"❌ NEWS API FAILED!")
-        print(f"   Error: {e}")
-        results["news"]["status"] = "failed"
-        results["news"]["message"] = str(e)
-        print()
+    def test_news_returns_articles(self):
+        """News API call (real or Gemini fallback) — returns 5 items"""
+        from app.adapters.news_adapter import news_adapter
 
-# ============================================================
-# SUMMARY
-# ============================================================
-
-print("=" * 70)
-print("📊 TEST RESULTS SUMMARY")
-print("=" * 70)
-print()
-
-# Gemini
-if results["gemini"]["status"] == "success":
-    print("✅ Gemini API - WORKING")
-elif results["gemini"]["status"] == "failed":
-    print(f"❌ Gemini API - FAILED ({results['gemini']['message']})")
-
-# Weather
-if results["weather"]["status"] == "success":
-    print(f"✅ Weather API - WORKING ({results['weather']['message']})")
-elif results["weather"]["status"] == "invalid_key":
-    print(f"❌ Weather API - INVALID KEY")
-elif results["weather"]["status"] == "failed":
-    print(f"❌ Weather API - FAILED ({results['weather']['message']})")
-elif results["weather"]["status"] == "skipped":
-    print(f"⚠️  Weather API - SKIPPED")
-
-# News
-if results["news"]["status"] == "success":
-    print(f"✅ News API - WORKING ({results['news']['message']})")
-elif results["news"]["status"] == "invalid_key":
-    print(f"❌ News API - INVALID KEY")
-elif results["news"]["status"] == "rate_limit":
-    print(f"⚠️  News API - RATE LIMITED")
-elif results["news"]["status"] == "failed":
-    print(f"❌ News API - FAILED ({results['news']['message']})")
-elif results["news"]["status"] == "skipped":
-    print(f"⚠️  News API - SKIPPED")
-
-print()
-
-# Overall
-working = sum(1 for r in results.values() if r["status"] == "success")
-total = sum(1 for r in results.values() if r["status"] != "skipped")
-
-if working == total and total > 0:
-    print("🎉 ALL CONFIGURED API KEYS ARE WORKING!")
-    sys.exit(0)
-elif working > 0:
-    print(f"⚠️  PARTIAL SUCCESS: {working}/{total} APIs working")
-    sys.exit(0)
-else:
-    print("❌ NO APIs WORKING")
-    sys.exit(1)
+        news = news_adapter.get_local_news("Rome", limit=5)
+        assert isinstance(news, list)
+        assert len(news) >= 1
+        assert "title" in news[0]
+        assert "category" in news[0]

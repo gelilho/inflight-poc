@@ -29,23 +29,21 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Test artifacts
-test_gemini.py
-test_gemini_adapter.py
-test_model.py
-test_working_model.py
-list_models.py
-inflight_experience_demo.json
-experience.json
-full_experience.json
+# Old root-level test artifacts (scoped to root only)
+/test_gemini.py
+/test_gemini_adapter.py
+/test_model.py
+/test_working_model.py
+/list_models.py
 
-# Test artifacts
+# Test cache
 .pytest_cache/
 .coverage
 htmlcov/
-*.log
 
-# Test output files
+# Output files
+*.log
 demo_*.json
+inflight_experience_demo.json
 experience.json
 full_experience.json

@@ -14,6 +14,6 @@ NEWS_COUNT = 5
 ALLOWED_NEWS_CATEGORIES = ["sports", "culture", "events", "local_interest"]
 
 # Gemini model configuration
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "models/gemini-2.5-flash"  # Latest and fastest!
 GEMINI_TEMPERATURE = 0.7
 GEMINI_MAX_TOKENS = 2048

@@ -29,19 +29,3 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router)
-
-
-@app.get("/")
-async def root():
-    """Root endpoint with API info"""
-    return {
-        "service": "Inflight Experience PoC",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/health",
-            "docs": "/docs",
-            "flow_b": "/api/v1/passenger-context/{user_id}",
-            "flow_a": "/api/v1/destination-experience/{airport_code}",
-            "big_flow": "/api/v1/inflight-experience/{user_id}"
-        }
-    }

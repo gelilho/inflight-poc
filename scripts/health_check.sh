@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# Navigate to project root (one level up from scripts/)
+cd "$(dirname "$0")/.."
+
+echo "Project Health Check"
+echo "====================="
+echo ""
+
+ISSUES=0
+
+# 1. Check for test files in root
+echo "1. Checking for misplaced test files..."
+TEST_FILES=$(find . -maxdepth 1 -name "test_*.py" 2>/dev/null | wc -l)
+if [ $TEST_FILES -gt 0 ]; then
+    echo "   WARNING: Found $TEST_FILES test files in root (should be in tests/)"
+    ISSUES=$((ISSUES + 1))
+else
+    echo "   OK: No test files in root"
+fi
+echo ""
+
+# 2. Check for JSON output files
+echo "2. Checking for output JSON files..."
+JSON_FILES=$(find . -maxdepth 1 -name "*.json" 2>/dev/null | wc -l)
+if [ $JSON_FILES -gt 0 ]; then
+    echo "   WARNING: Found $JSON_FILES JSON files in root"
+    ISSUES=$((ISSUES + 1))
+else
+    echo "   OK: No output files in root"
+fi
+echo ""
+
+# 3. Check for Python cache
+echo "3. Checking for Python cache..."
+CACHE_DIRS=$(find . -type d -name "__pycache__" 2>/dev/null | wc -l)
+if [ $CACHE_DIRS -gt 5 ]; then
+    echo "   WARNING: Found $CACHE_DIRS __pycache__ directories"
+    ISSUES=$((ISSUES + 1))
+else
+    echo "   OK: Python cache minimal"
+fi
+echo ""
+
+# 4. Check .env is not in git
+echo "4. Checking .env is not tracked..."
+if git ls-files --error-unmatch .env &>/dev/null; then
+    echo "   CRITICAL: .env is tracked by git!"
+    ISSUES=$((ISSUES + 1))
+else
+    echo "   OK: .env is not tracked"
+fi
+echo ""
+
+# 5. Check project structure
+echo "5. Checking project structure..."
+REQUIRED_DIRS=("app" "config" "data" "tests" "scripts")
+for dir in "${REQUIRED_DIRS[@]}"; do
+    if [ ! -d "$dir" ]; then
+        echo "   MISSING: Required directory: $dir"
+        ISSUES=$((ISSUES + 1))
+    fi
+done
+echo "   OK: All required directories exist"
+echo ""
+
+# 6. Check for backup files
+echo "6. Checking for backup files..."
+BACKUP_FILES=$(find . -maxdepth 2 \( -name "*.backup" -o -name "*.bak" -o -name "*~" \) 2>/dev/null | wc -l)
+if [ $BACKUP_FILES -gt 0 ]; then
+    echo "   WARNING: Found $BACKUP_FILES backup files"
+    ISSUES=$((ISSUES + 1))
+else
+    echo "   OK: No backup files"
+fi
+echo ""
+
+# 7. Run pytest (quick check)
+echo "7. Running tests..."
+python -m pytest -m "not live" --tb=line -q 2>&1
+echo ""
+
+# Summary
+echo "====================="
+if [ $ISSUES -eq 0 ]; then
+    echo "Project is clean and healthy!"
+else
+    echo "Found $ISSUES issues. Run 'scripts/cleanup.sh' to fix."
+fi
+echo ""

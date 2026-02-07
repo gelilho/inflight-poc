@@ -77,7 +77,7 @@ async def root():
     summary="Get passenger information"
 )
 async def get_passenger(
-    user_id: str = Path(..., description="Passenger user ID", example="P001")
+    user_id: str = Path(..., description="Passenger user ID", examples=["P001"])
 ):
     """
     Get passenger personal information.
@@ -99,7 +99,7 @@ async def get_passenger(
     summary="Get all bookings for a passenger"
 )
 async def get_passenger_bookings(
-    user_id: str = Path(..., description="Passenger user ID", example="P001")
+    user_id: str = Path(..., description="Passenger user ID", examples=["P001"])
 ):
     """
     Get all bookings associated with a passenger.
@@ -125,7 +125,7 @@ async def get_passenger_bookings(
     summary="Get booking details by booking number"
 )
 async def get_booking(
-    booking_number: str = Path(..., description="Booking number (PNR)", example="VY4K7M")
+    booking_number: str = Path(..., description="Booking number (PNR)", examples=["VY4K7M"])
 ):
     """
     Get booking details by booking number (PNR).
@@ -153,8 +153,8 @@ async def get_booking(
     summary="Get flight operational details for specific date"
 )
 async def get_flight(
-    flight_number: str = Path(..., description="Flight number", example="VY71299"),
-    date: str = Path(..., description="Flight date (YYYYMMDD)", example="20260207")
+    flight_number: str = Path(..., description="Flight number", examples=["VY71299"]),
+    date: str = Path(..., description="Flight date (YYYYMMDD)", examples=["20260207"])
 ):
     """
     Get flight operational details for a specific date.
@@ -188,8 +188,8 @@ async def get_flight(
     summary="Get destination content (AI-generated)"
 )
 async def get_destination_content(
-    airport_code: str = Path(..., description="Airport code", example="FCO"),
-    language: str = Path(..., description="Language code", example="es")
+    airport_code: str = Path(..., description="Airport code", examples=["FCO"]),
+    language: str = Path(..., description="Language code", examples=["es"])
 ):
     """
     Get complete destination content including:
@@ -227,8 +227,8 @@ async def get_destination_content(
     summary="Get 3-day weather forecast"
 )
 async def get_weather(
-    airport_code: str = Path(..., description="Airport code", example="FCO"),
-    language: str = Path(..., description="Language code", example="en")
+    airport_code: str = Path(..., description="Airport code", examples=["FCO"]),
+    language: str = Path(..., description="Language code", examples=["en"])
 ):
     """
     Get 3-day weather forecast for destination.
@@ -260,8 +260,8 @@ async def get_weather(
     summary="Get local news headlines"
 )
 async def get_news(
-    airport_code: str = Path(..., description="Airport code", example="FCO"),
-    language: str = Path(..., description="Language code", example="it")
+    airport_code: str = Path(..., description="Airport code", examples=["FCO"]),
+    language: str = Path(..., description="Language code", examples=["it"])
 ):
     """
     Get 5 local news headlines for destination.
@@ -304,8 +304,8 @@ async def get_news(
     summary="Complete inflight experience (BIG FLOW)"
 )
 async def get_inflight_experience(
-    booking_number: str = Path(..., description="Booking number (PNR)", example="VY4K7M"),
-    language: str = Path(..., description="Language code", example="es")
+    booking_number: str = Path(..., description="Booking number (PNR)", examples=["VY4K7M"]),
+    language: str = Path(..., description="Language code", examples=["es"])
 ):
     """
     **THE BIG FLOW** - Complete inflight experience in one call.

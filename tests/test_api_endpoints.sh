@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Install jq if needed
+# Check jq is available
 if ! command -v jq &> /dev/null; then
-    echo "📦 Installing jq for pretty JSON output..."
-    brew install jq
+    echo "❌ jq is required for this script. Install it first:"
+    echo "   macOS:  brew install jq"
+    echo "   Linux:  sudo apt-get install jq"
+    exit 1
 fi
 
 BASE_URL="http://localhost:8000"
@@ -11,13 +13,13 @@ BASE_URL="http://localhost:8000"
 echo "🧪 Testing Inflight Experience API Endpoints"
 echo "=============================================="
 echo ""
-echo "⚠️  Make sure server is running: ./run.sh"
+echo "⚠️  Make sure server is running: scripts/run.sh"
 echo ""
 
 # Check if server is running
 if ! curl -s $BASE_URL/health > /dev/null 2>&1; then
     echo "❌ Server is not running!"
-    echo "   Start it with: ./run.sh"
+    echo "   Start it with: scripts/run.sh"
     exit 1
 fi
 

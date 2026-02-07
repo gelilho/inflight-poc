@@ -4,6 +4,7 @@ import requests
 from typing import List, Dict
 from datetime import datetime, timedelta
 from config.settings import get_settings
+from config.constants import AIRPORT_COORDINATES
 import logging
 
 logger = logging.getLogger(__name__)
@@ -11,17 +12,11 @@ logger = logging.getLogger(__name__)
 
 class WeatherAdapter:
     """Weather adapter using OpenWeatherMap API"""
-    
+
     def __init__(self):
         self.settings = get_settings()
         self.base_url = "https://api.openweathermap.org/data/2.5/forecast"
-        
-        # Airport coordinates (for API calls)
-        self.airport_coords = {
-            "FCO": {"lat": 41.8003, "lon": 12.2389},  # Rome Fiumicino
-            "LHR": {"lat": 51.4700, "lon": -0.4543},   # London Heathrow
-            "CDG": {"lat": 49.0097, "lon": 2.5479},    # Paris CDG
-        }
+        self.airport_coords = AIRPORT_COORDINATES
     
     def get_forecast(self, airport_code: str, days: int = 3) -> List[Dict]:
         """Get weather forecast from OpenWeatherMap"""

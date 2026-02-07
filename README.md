@@ -1,31 +1,39 @@
 
-## 🧪 Running Tests
+## Running Tests
 
-### All Tests
+### All Tests (mocked, no API calls)
 ```bash
-./run_tests.sh
+scripts/run_tests.sh
 ```
 
 ### Specific Test Suites
 
-**Adapter Tests:**
+**Unit Tests:**
 ```bash
-python tests/adapters/test_gemini_adapter.py
-python tests/adapters/test_weather_news_adapters.py
+python -m pytest tests/unit/ -v
 ```
 
-**Integration Tests:**
+**Integration Tests (mocked API endpoints):**
 ```bash
-python tests/integration/test_api_keys_integration.py
+python -m pytest tests/integration/ -v
+```
+
+**Live API Tests (real calls to Gemini/Weather/News):**
+```bash
+python -m pytest -m live -v
 ```
 
 ### Test Structure
 ```
 tests/
-├── adapters/          # Adapter-specific tests
+├── unit/                  # Unit tests (mocked adapters)
+│   ├── test_csv_loader.py
 │   ├── test_gemini_adapter.py
-│   └── test_weather_news_adapters.py
-├── integration/       # API key integration tests
+│   ├── test_news_filtering.py
+│   ├── test_schemas.py
+│   └── test_services.py
+├── integration/           # Integration tests
+│   ├── test_api_endpoints.py
 │   └── test_api_keys_integration.py
-└── unit/             # Unit tests (future)
+└── test_api_endpoints.sh  # cURL-based endpoint smoke tests
 ```

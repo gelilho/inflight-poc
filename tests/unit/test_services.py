@@ -7,7 +7,7 @@ from app.services.flight_service import FlightService
 from app.services.destination_service import DestinationService
 from app.models.schemas import (
     Passenger, Booking, Flight, Aircraft, CockpitCrew, CrewMember,
-    Destination, EmergencyContacts
+    CabinCrewMember, Destination, EmergencyContacts
 )
 
 
@@ -61,9 +61,9 @@ def _make_flight():
             first_officer=CrewMember(first_name="Marco", last_name="Bianchi")
         ),
         cabin_crew=[
-            CrewMember(first_name="Sofia", last_name="Conti"),
-            CrewMember(first_name="Elena", last_name="Greco"),
-            CrewMember(first_name="Paolo", last_name="Ricci"),
+            CabinCrewMember(first_name="Sofia"),
+            CabinCrewMember(first_name="Elena"),
+            CabinCrewMember(first_name="Paolo"),
         ],
         average_duration_minutes=105,
         departure_gate="B23",
@@ -188,7 +188,7 @@ class TestDestinationService:
     @patch("app.services.destination_service.gemini_adapter")
     @patch("app.services.destination_service.csv_loader")
     def test_get_destination_content_non_english_triggers_translation(self, mock_loader, mock_gemini):
-        """Non-english should trigger translation"""
+        """Non-English should trigger translation"""
         mock_loader.get_destination_info.return_value = {
             "destination": Destination(city="Rome", country="Italy", airport_code="FCO"),
             "emergency_contacts": EmergencyContacts(

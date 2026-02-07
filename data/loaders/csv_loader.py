@@ -2,8 +2,8 @@ import pandas as pd
 from pathlib import Path
 from typing import Optional, List
 from app.models.schemas import (
-    Passenger, Booking, Flight, Aircraft, CockpitCrew, 
-    CrewMember, EmergencyContacts, Destination
+    Passenger, Booking, Flight, Aircraft, CockpitCrew,
+    CrewMember, CabinCrewMember, EmergencyContacts, Destination
 )
 
 
@@ -127,9 +127,9 @@ class CSVDataLoader:
                 )
             ),
             cabin_crew=[
-                CrewMember(first_name=row["crew1_first"], last_name=row["crew1_last"]),
-                CrewMember(first_name=row["crew2_first"], last_name=row["crew2_last"]),
-                CrewMember(first_name=row["crew3_first"], last_name=row["crew3_last"]),
+                CabinCrewMember(first_name=row["crew1_first"]),
+                CabinCrewMember(first_name=row["crew2_first"]),
+                CabinCrewMember(first_name=row["crew3_first"]),
             ],
             average_duration_minutes=int(row["avg_duration_min"]),
             departure_gate=row["departure_gate"],

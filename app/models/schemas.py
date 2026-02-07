@@ -18,7 +18,7 @@ class Booking(BaseModel):
     booking_number: str           # PNR: "VY4K7M"
     user_id: str
     flight_number: str
-    flight_date: str              # "2026-02-07"
+    flight_date: str              # "20260207" (YYYYMMDD)
     seat: str
     origin: str                   # "BCN"
     origin_airport_name: str      # "Barcelona El Prat"
@@ -39,8 +39,14 @@ class Aircraft(BaseModel):
 
 
 class CrewMember(BaseModel):
+    """Cockpit crew member (captain / first officer) — full name public"""
     first_name: str
     last_name: str
+
+
+class CabinCrewMember(BaseModel):
+    """Cabin crew member — first name only (privacy)"""
+    first_name: str
 
 
 class CockpitCrew(BaseModel):
@@ -50,14 +56,14 @@ class CockpitCrew(BaseModel):
 
 class Flight(BaseModel):
     flight_number: str
-    flight_date: str              # "2026-02-07"
+    flight_date: str              # "20260207" (YYYYMMDD)
     departure_time: str           # "14:30"
     arrival_time: str             # "16:15"
     origin: str
     destination: str
     aircraft: Aircraft
     cockpit_crew: CockpitCrew
-    cabin_crew: List[CrewMember] = Field(..., min_length=3, max_length=3)
+    cabin_crew: List[CabinCrewMember] = Field(..., min_length=3, max_length=3)
     average_duration_minutes: int
     departure_gate: str
     baggage_claim_belt: str

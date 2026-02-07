@@ -3,6 +3,7 @@
 import requests
 from typing import List, Dict
 from config.settings import get_settings
+from config.constants import CITY_COUNTRY_CODES
 from datetime import datetime, timedelta
 import logging
 
@@ -11,17 +12,11 @@ logger = logging.getLogger(__name__)
 
 class NewsAdapter:
     """News adapter using NewsAPI.org"""
-    
+
     def __init__(self):
         self.settings = get_settings()
         self.base_url = "https://newsapi.org/v2/everything"
-        
-        # City to country mapping for news search
-        self.city_countries = {
-            "Rome": "it",
-            "London": "gb",
-            "Paris": "fr"
-        }
+        self.city_countries = CITY_COUNTRY_CODES
     
     def get_local_news(self, city: str, limit: int = 5) -> List[Dict]:
         """Get local news from NewsAPI"""

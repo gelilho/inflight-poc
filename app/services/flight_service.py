@@ -16,7 +16,7 @@ class FlightService:
         
         Args:
             flight_number: Flight number (e.g., "VY71299")
-            flight_date: Date in YYYY-MM-DD format (e.g., "2026-02-07")
+            flight_date: Date in YYYYMMDD format (e.g., "20260207")
         """
         logger.info(f"Fetching flight: {flight_number} on {flight_date}")
         

@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 from app.models.schemas import (
     Passenger, Booking, Flight, Aircraft, CockpitCrew, CrewMember,
-    Destination, Highlight, Restaurant, EmergencyContacts,
+    CabinCrewMember, Destination, Highlight, Restaurant, EmergencyContacts,
     TransportOption, AirportTransport, WeatherForecast, LocalNews,
     DestinationContent, InflightExperience, ErrorResponse, ErrorDetail
 )
@@ -15,7 +15,13 @@ from app.models.schemas import (
 # ============================================================
 
 def make_crew_member(first="Sofia", last="Conti"):
+    """Cockpit crew member (captain / first officer) — full name"""
     return CrewMember(first_name=first, last_name=last)
+
+
+def make_cabin_crew(first="Sofia"):
+    """Cabin crew member — first name only (privacy)"""
+    return CabinCrewMember(first_name=first)
 
 
 def make_highlight(id_num=1):
@@ -110,7 +116,7 @@ class TestFlightSchema:
                 captain=make_crew_member("Laura", "Rossi"),
                 first_officer=make_crew_member("Marco", "Bianchi")
             ),
-            cabin_crew=[make_crew_member() for _ in range(cabin_crew_count)],
+            cabin_crew=[make_cabin_crew() for _ in range(cabin_crew_count)],
             average_duration_minutes=105,
             departure_gate="B23",
             baggage_claim_belt="Carousel 5"

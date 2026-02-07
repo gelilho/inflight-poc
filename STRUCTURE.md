@@ -1,4 +1,4 @@
-# 📂 Project Structure
+# Project Structure
 ```
 inflight-poc/
 │
@@ -23,7 +23,7 @@ inflight-poc/
 │   │   ├── passenger_service.py  # Passenger operations
 │   │   ├── flight_service.py     # Flight operations
 │   │   ├── destination_service.py # Destination content
-│   │   └── inflight_service.py   # Orchestration (BIG FLOW)
+│   │   └── inflight_service.py   # Orchestration (full experience)
 │   │
 │   └── main.py                   # FastAPI app entry point
 │
@@ -43,13 +43,30 @@ inflight-poc/
 │       └── destinations.csv      # Destination data
 │
 ├── tests/                        # ALL TESTS HERE
-│   ├── adapters/                 # Adapter tests
+│   ├── unit/                     # Unit tests (mocked adapters)
+│   │   ├── test_csv_loader.py
 │   │   ├── test_gemini_adapter.py
-│   │   └── test_weather_news_adapters.py
+│   │   ├── test_news_filtering.py
+│   │   ├── test_schemas.py
+│   │   └── test_services.py
 │   ├── integration/              # Integration tests
+│   │   ├── test_api_endpoints.py
 │   │   └── test_api_keys_integration.py
-│   ├── unit/                     # Unit tests (future)
-│   └── test_api_endpoints.sh    # API endpoint tests
+│   └── test_api_endpoints.sh     # cURL-based endpoint smoke tests
+│
+├── scripts/                      # Utility scripts
+│   ├── run.sh                    # Start server
+│   ├── run_tests.sh              # Run all tests
+│   ├── cleanup.sh                # Cleanup temp files
+│   └── health_check.sh           # Project health check
+│
+├── business-docs/                # Business documentation
+│   ├── ONE_PAGER.md
+│   ├── DECK.md
+│   ├── TRIGGER_FLOW.md
+│   ├── PITCH_SCRIPT.md
+│   ├── TECHNICAL_ARCHITECTURE.md
+│   └── KPIs_AND_METRICS.md
 │
 ├── .env                          # Environment variables (NOT in git)
 ├── .gitignore                    # Git ignore rules
@@ -57,34 +74,21 @@ inflight-poc/
 ├── STRUCTURE.md                  # This file
 ├── STATUS.md                     # Current project status
 ├── requirements.txt              # Python dependencies
-├── pytest.ini                    # Test configuration
-├── run.sh                        # Start server script
-├── run_tests.sh                  # Run all tests
-├── cleanup.sh                    # Cleanup temporary files
-└── health_check.sh              # Project health check
+└── pytest.ini                    # Test configuration
 ```
-
-## Key Changes
-
-✅ **ALL tests now in `tests/` directory**
-- Unit tests: `tests/unit/`
-- Integration tests: `tests/integration/`
-- Adapter tests: `tests/adapters/`
-- API endpoint tests: `tests/test_api_endpoints.sh`
-
-✅ **Root directory is clean**
-- Only essential scripts: `run.sh`, `run_tests.sh`, `cleanup.sh`, `health_check.sh`
-- No test files
-- No output files
-- Professional structure
 
 ## Running Tests
 ```bash
-# All tests (including API endpoints if server running)
-./run_tests.sh
+# All mocked tests (unit + integration, no real API calls)
+scripts/run_tests.sh
 
 # Individual test suites
-python tests/adapters/test_gemini_adapter.py
-python tests/integration/test_api_keys_integration.py
-./tests/test_api_endpoints.sh  # Requires server running
+python -m pytest tests/unit/ -v
+python -m pytest tests/integration/ -v
+
+# Live API tests (real calls to Gemini/Weather/News)
+python -m pytest -m live -v
+
+# cURL endpoint smoke tests (requires server running)
+bash tests/test_api_endpoints.sh
 ```

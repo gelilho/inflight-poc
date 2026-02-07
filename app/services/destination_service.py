@@ -30,28 +30,40 @@ class DestinationService:
         destination = dest_info["destination"]
         emergency_contacts = dest_info["emergency_contacts"]
         
-        # Generate content with Gemini
-        highlights_data = gemini_adapter.generate_highlights(
-            destination.city,
-            destination.country
-        )
-        highlights = [Highlight(**h) for h in highlights_data]
-        
-        restaurants_data = gemini_adapter.generate_restaurants(
-            destination.city,
-            destination.country
-        )
-        restaurants = [Restaurant(**r) for r in restaurants_data]
-        
-        transport_data = gemini_adapter.generate_airport_transport(
-            destination.city,
-            airport_code
-        )
-        transport_options = [TransportOption(**t) for t in transport_data]
-        airport_transport = AirportTransport(
-            destination="main_train_station",
-            options=transport_options
-        )
+        # Generate content with Gemini (with fallback to static defaults)
+        try:
+            highlights_data = gemini_adapter.generate_highlights(
+                destination.city,
+                destination.country
+            )
+            highlights = [Highlight(**h) for h in highlights_data]
+        except Exception as e:
+            logger.error(f"Gemini highlights failed: {e}, using fallback")
+            highlights = self._fallback_highlights(destination.city)
+
+        try:
+            restaurants_data = gemini_adapter.generate_restaurants(
+                destination.city,
+                destination.country
+            )
+            restaurants = [Restaurant(**r) for r in restaurants_data]
+        except Exception as e:
+            logger.error(f"Gemini restaurants failed: {e}, using fallback")
+            restaurants = self._fallback_restaurants(destination.city)
+
+        try:
+            transport_data = gemini_adapter.generate_airport_transport(
+                destination.city,
+                airport_code
+            )
+            transport_options = [TransportOption(**t) for t in transport_data]
+            airport_transport = AirportTransport(
+                destination="main_train_station",
+                options=transport_options
+            )
+        except Exception as e:
+            logger.error(f"Gemini transport failed: {e}, using fallback")
+            airport_transport = self._fallback_transport()
         
         # Build content
         content = DestinationContent(
@@ -105,6 +117,49 @@ class DestinationService:
         
         return news_items
     
+    # ------------------------------------------------------------------
+    # Fallbacks — static defaults when Gemini is unreachable
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _fallback_highlights(city: str) -> List[Highlight]:
+        """Return 5 generic highlights when AI generation fails"""
+        return [
+            Highlight(
+                id=f"H00{i}",
+                title=f"{city} Highlight {i}",
+                brief_description=f"Discover a must-see spot in {city}.",
+                long_description=f"This is one of the most popular places to visit in {city}. "
+                                 "Ask your cabin crew or check the local tourism office for details."
+            )
+            for i in range(1, 6)
+        ]
+
+    @staticmethod
+    def _fallback_restaurants(city: str) -> List[Restaurant]:
+        """Return 3 generic restaurants when AI generation fails"""
+        cuisines = ["Local", "Mediterranean", "International"]
+        return [
+            Restaurant(
+                name=f"{city} Restaurant {i}",
+                cuisine=cuisines[i - 1],
+                brief_description=f"A popular {cuisines[i - 1].lower()} restaurant in {city}.",
+                long_description=f"Enjoy authentic {cuisines[i - 1].lower()} cuisine in the heart of {city}. "
+                                 "Check local reviews for the latest recommendations."
+            )
+            for i in range(1, 4)
+        ]
+
+    @staticmethod
+    def _fallback_transport() -> AirportTransport:
+        """Return a safe default transport option when AI generation fails"""
+        return AirportTransport(
+            destination="main_train_station",
+            options=[
+                TransportOption(mode="taxi", estimated_duration_minutes=30, notes="Available at arrivals exit")
+            ]
+        )
+
     def _translate_content(self, content: DestinationContent, language: str) -> DestinationContent:
         """Translate content"""
         try:

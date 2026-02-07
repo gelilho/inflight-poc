@@ -1,5 +1,9 @@
 # Vueling Inflight Experience — One Pager
 
+> **In brief:** Vueling Inflight Experience is an AI-powered digital platform that transforms every flight into a personalized journey. From pre-ordering your meal the day before, to discovering your destination at 35,000 feet, to listening to curated music and reading a digital magazine — all delivered through the Vueling app and inflight WiFi. One booking number. Eight experience pillars. A complete ecosystem that delights passengers, drives ancillary revenue, and positions Vueling as the most innovative low-cost carrier in Europe.
+
+---
+
 ## The Vision
 
 **Transform every Vueling flight into a personalized, immersive digital journey** — from the moment a passenger checks in to the moment they land.
@@ -14,7 +18,7 @@ Not just a destination guide. A complete inflight ecosystem: curated content, li
 - No personalized content. No entertainment beyond what they bring
 - Food service is reactive — cabin crew walks the aisle, passengers decide on the spot (or not at all)
 - No connection between the airline and the passenger's destination
-- Missed revenue: most passengers never buy food because the process is friction-heavy
+- Missed revenue: most passengers skip food purchases simply because the current ordering experience isn't convenient enough
 - Competitors are investing in digital — Vueling risks falling behind
 
 ---
@@ -27,14 +31,16 @@ A single, unified digital experience delivered via the Vueling app and inflight 
 
 | Experience Pillar | What It Delivers |
 |---|---|
-| **Discover Your Destination** | Top 5 highlights, 3 restaurant picks, transport options, emergency contacts — AI-generated, in their language |
-| **Live Flight Tracker** | Real-time aircraft position on a map, altitude, speed, time to destination |
-| **Your Aircraft** | Aircraft model, name ("Spirit of Barcelona"), registration, age — make flying personal |
-| **Your Crew** | Captain and cabin crew names — humanize the experience |
+| **Food & Snacks** | Browse the onboard menu, pre-order before the flight, order during the flight — delivered to your seat. No queues, no waiting. |
+| **Your Aircraft** | Aircraft model, name ("Spirit of Barcelona"), registration, age — make flying personal and transparent |
+| **Your Crew** | Captain and cabin crew names — humanize the experience, passengers feel they're in good hands |
+| **Live Flight Tracker** | Real-time aircraft position on a map, altitude, speed, time to destination — see exactly where you are |
+| **Discover Your Destination** | Top 5 highlights, 3 restaurant picks — AI-generated, in their language |
+| **Getting to the City** | Airport-to-city transport options (train, bus, taxi) with times, costs, and practical tips — plus the option to book your transfer online |
+| **Peace of Mind** | Emergency contacts (police, hospital, taxi) and Vueling helpline always at hand — because feeling safe matters |
 | **Weather & News** | 3-day forecast + curated local news (sports, culture, events — inflight-safe) |
-| **Digital Magazine** | Curated articles about destination, travel tips, Vueling stories — replaces paper magazine |
 | **Music & Audio** | AI-curated playlists by mood and destination — mix of decades, local artists, chill vibes |
-| **Food & Snacks** | Browse the onboard menu, pre-order before the flight, order during the flight — delivered to your seat |
+| **Digital Magazine** | Curated articles about destination, travel tips, Vueling stories — bringing back the spirit of the beloved Ling magazine, now in digital form |
 
 ---
 
@@ -98,6 +104,58 @@ This is the **monetization vertical** that pays for the entire platform.
 | **Satisfaction** | Inflight satisfaction survey score | >4.2 / 5.0 |
 | **Operational** | Cabin crew service time reduction | -15% per flight |
 | **Operational** | Food waste reduction (pre-order accuracy) | -20% |
+| **Sustainability** | Catering demand forecasting accuracy (pre-orders as demand signal) | >85% accuracy |
+| **Sustainability** | Paper magazine elimination | 100% digital by Phase 1 |
+
+---
+
+## Technical Solution — How It All Works Under the Hood
+
+The platform is built on an **offline-first, pre-computed architecture** designed to deliver a seamless experience even with limited inflight connectivity.
+
+### Content Generation (Scheduled, Not On-Demand)
+
+Content is **never generated per-request**. Instead, it is produced on scheduled cadences and cached:
+
+| Content | Refresh Cadence | Source |
+|---|---|---|
+| Destination highlights, restaurants, transport | Every **2 weeks** per destination | Google Gemini AI |
+| Flight details (crew, aircraft) | **Daily** — when crew and aircraft are allocated to flights | Airline operations systems |
+| Weather forecast | Every **12 hours** | OpenWeatherMap API |
+| Local news | Every **6 hours** (filtered for inflight safety) | NewsAPI.org + AI filtering |
+| Music playlists | **Weekly** — curated by mood and destination, mixing decades and local artists | AI Music Curation Engine |
+| Digital magazine articles | **Weekly** — AI-assisted editorial | Gemini + Editorial team |
+| Food menu | **Weekly** or per season | Catering team |
+| Translations (6 languages) | Triggered after any content update | Google Gemini AI |
+
+### Delivery to Passengers — Silent Push & Edge Caching
+
+**For passengers with the Vueling app:**
+- **T-24h before flight**: A silent push notification triggers a background download of the entire content package (destination guide, magazine, music, weather, flight details, menu). Size: ~15-25 MB.
+- **At boarding**: The experience loads instantly from the device — zero bandwidth needed. Everything works offline.
+
+**For passengers without the app (WiFi portal):**
+- **Before departure**: At the gate, ground WiFi pushes the full content package to an **onboard edge cache server** on the aircraft.
+- **Onboard**: Passengers connect to inflight WiFi, enter their PNR, and the content is served from the local onboard server at LAN speed — no satellite bandwidth required for content.
+
+### What Actually Uses Satellite Bandwidth
+
+Only three things go over the satellite link during the flight:
+
+| Data | Size | Frequency |
+|---|---|---|
+| Flight tracker updates (position, altitude, speed) | ~1 KB | Every 30 seconds |
+| Food orders (JSON payload) | ~2 KB per order | Per order (~20/flight) |
+| Payment transactions | ~1 KB per transaction | Per order |
+
+**Total satellite bandwidth per flight: ~370 KB.** Less than a single webpage. Satellite costs are negligible.
+
+### Food Orders & Payments
+
+- **Pre-orders** (T-24h to T-1h): Processed over normal internet. Forwarded to the catering system at cutoff (T-6h). Cabin crew receives a per-seat manifest on their tablet.
+- **Onboard orders**: Processed in real-time over the satellite link. Payment is tokenized (PCI-DSS compliant). Order goes to crew tablet, crew prepares and delivers to seat.
+
+This architecture ensures the experience is **always fast, always available, and costs almost nothing to operate per passenger (~0.005 EUR).**
 
 ---
 

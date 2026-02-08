@@ -187,8 +187,8 @@ class TestDestinationService:
 
     @patch("app.services.destination_service.gemini_adapter")
     @patch("app.services.destination_service.csv_loader")
-    def test_get_destination_content_non_english_triggers_translation(self, mock_loader, mock_gemini):
-        """Non-English should trigger translation"""
+    def test_get_destination_content_non_english_passes_language_to_gemini(self, mock_loader, mock_gemini):
+        """Non-English should pass language directly to Gemini (no separate translation)"""
         mock_loader.get_destination_info.return_value = {
             "destination": Destination(city="Rome", country="Italy", airport_code="FCO"),
             "emergency_contacts": EmergencyContacts(
@@ -197,43 +197,26 @@ class TestDestinationService:
             )
         }
         mock_gemini.generate_highlights.return_value = [
-            {"id": f"H00{i}", "title": f"Place {i}",
-             "brief_description": "Brief", "long_description": "Long"}
+            {"id": f"H00{i}", "title": f"Lugar {i}",
+             "brief_description": "Breve", "long_description": "Largo"}
             for i in range(1, 6)
         ]
         mock_gemini.generate_restaurants.return_value = [
-            {"name": f"R {i}", "cuisine": "Italian",
-             "brief_description": "Brief", "long_description": "Long"}
+            {"name": f"R {i}", "cuisine": "Italiano",
+             "brief_description": "Breve", "long_description": "Largo"}
             for i in range(1, 4)
         ]
         mock_gemini.generate_airport_transport.return_value = [
-            {"mode": "train", "estimated_duration_minutes": 30, "notes": "Fast"}
+            {"mode": "train", "estimated_duration_minutes": 30, "notes": "Rapido"}
         ]
-        # Translation returns the same structure (mock)
-        mock_gemini.translate_content.return_value = {
-            "destination": {"city": "Roma", "country": "Italia", "airport_code": "FCO"},
-            "highlights": [
-                {"id": f"H00{i}", "title": f"Lugar {i}",
-                 "brief_description": "Breve", "long_description": "Largo"}
-                for i in range(1, 6)
-            ],
-            "emergency_contacts": {
-                "police": "112", "ambulance": "118", "fire": "115",
-                "radio_taxi": "+39", "airport_info": "+39", "vueling_contact": "+34"
-            },
-            "restaurants": [
-                {"name": f"R {i}", "cuisine": "Italiano",
-                 "brief_description": "Breve", "long_description": "Largo"}
-                for i in range(1, 4)
-            ],
-            "airport_transport": {
-                "destination": "main_train_station",
-                "options": [{"mode": "train", "estimated_duration_minutes": 30, "notes": "Rapido"}]
-            }
-        }
 
         result = self.service.get_destination_content("FCO", "es")
-        mock_gemini.translate_content.assert_called_once()
+        # Verify language was passed directly to generate methods
+        mock_gemini.generate_highlights.assert_called_once_with("Rome", "Italy", "es")
+        mock_gemini.generate_restaurants.assert_called_once_with("Rome", "Italy", "es")
+        mock_gemini.generate_airport_transport.assert_called_once_with("Rome", "FCO", "es")
+        # No translation call needed
+        mock_gemini.translate_content.assert_not_called()
 
     @patch("app.services.destination_service.csv_loader")
     def test_get_destination_content_unknown_airport_raises(self, mock_loader):

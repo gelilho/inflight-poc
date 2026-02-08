@@ -1,4 +1,9 @@
-"""Destination Service - Handle destination content operations"""
+"""
+Destination Service — speed-optimised.
+
+Key change: Gemini generates content directly in the target language.
+This eliminates the expensive translation step (was adding ~15-20s).
+"""
 
 from app.models.schemas import (
     DestinationContent, Destination, Highlight, Restaurant,
@@ -17,24 +22,23 @@ logger = logging.getLogger(__name__)
 
 class DestinationService:
     """Service for destination content operations"""
-    
+
     def get_destination_content(self, airport_code: str, language: str = "en") -> DestinationContent:
-        """Get complete destination content"""
+        """Get complete destination content — generated directly in target language"""
         logger.info(f"Fetching destination content: {airport_code} in {language}")
-        
+
         # Get destination info from CSV
         dest_info = csv_loader.get_destination_info(airport_code)
         if not dest_info:
             raise ValueError(f"Destination not found: {airport_code}")
-        
+
         destination = dest_info["destination"]
         emergency_contacts = dest_info["emergency_contacts"]
-        
-        # Generate content with Gemini (with fallback to static defaults)
+
+        # Generate content with Gemini DIRECTLY in the target language
         try:
             highlights_data = gemini_adapter.generate_highlights(
-                destination.city,
-                destination.country
+                destination.city, destination.country, language
             )
             highlights = [Highlight(**h) for h in highlights_data]
         except Exception as e:
@@ -43,8 +47,7 @@ class DestinationService:
 
         try:
             restaurants_data = gemini_adapter.generate_restaurants(
-                destination.city,
-                destination.country
+                destination.city, destination.country, language
             )
             restaurants = [Restaurant(**r) for r in restaurants_data]
         except Exception as e:
@@ -53,8 +56,7 @@ class DestinationService:
 
         try:
             transport_data = gemini_adapter.generate_airport_transport(
-                destination.city,
-                airport_code
+                destination.city, airport_code, language
             )
             transport_options = [TransportOption(**t) for t in transport_data]
             airport_transport = AirportTransport(
@@ -64,8 +66,8 @@ class DestinationService:
         except Exception as e:
             logger.error(f"Gemini transport failed: {e}, using fallback")
             airport_transport = self._fallback_transport()
-        
-        # Build content
+
+        # Build content — NO translation step needed!
         content = DestinationContent(
             destination=destination,
             highlights=highlights,
@@ -73,102 +75,93 @@ class DestinationService:
             restaurants=restaurants,
             airport_transport=airport_transport
         )
-        
-        # Translate if needed
-        if language != "en":
-            content = self._translate_content(content, language)
-        
+
         return content
-    
+
     def get_weather(self, airport_code: str, language: str = "en") -> List[WeatherForecast]:
         """Get weather forecast using real API"""
         logger.info(f"Fetching weather: {airport_code} in {language}")
-        
+
         weather_data = weather_adapter.get_forecast(airport_code, days=3)
         forecasts = [WeatherForecast(**w) for w in weather_data]
-        
+
         return forecasts
-    
+
     def get_news(self, airport_code: str, language: str = "en") -> List[LocalNews]:
-        """Get local news using real API or Gemini fallback"""
+        """Get local news — Gemini generates directly in the target language"""
         logger.info(f"Fetching news: {airport_code} in {language}")
-        
+
         dest_info = csv_loader.get_destination_info(airport_code)
         if not dest_info:
             raise ValueError(f"Destination not found: {airport_code}")
-        
+
         destination = dest_info["destination"]
-        
-        # Try real news API first
-        news_data = news_adapter.get_local_news(destination.city, limit=5)
-        news_items = [LocalNews(**n) for n in news_data]
-        
-        # Translate if needed
-        if language != "en":
-            for i, item in enumerate(news_items):
-                try:
-                    translated = gemini_adapter.translate_content(
-                        item.model_dump(),
-                        language
-                    )
-                    news_items[i] = LocalNews(**translated)
-                except Exception as e:
-                    logger.error(f"Failed to translate news item: {e}")
-        
-        return news_items
-    
+
+        # Try real news API first (English results)
+        try:
+            news_data = news_adapter.get_local_news(destination.city, limit=5)
+            if news_data and len(news_data) >= 3:
+                news_items = [LocalNews(**n) for n in news_data]
+                # Translate if needed (news API returns English)
+                if language != "en":
+                    for i, item in enumerate(news_items):
+                        try:
+                            translated = gemini_adapter.translate_content(
+                                item.model_dump(), language
+                            )
+                            news_items[i] = LocalNews(**translated)
+                        except Exception as e:
+                            logger.error(f"Failed to translate news item: {e}")
+                return news_items
+        except Exception as e:
+            logger.warning(f"News API failed: {e}, falling back to Gemini")
+
+        # Fallback: generate news directly in the target language with Gemini
+        try:
+            news_data = gemini_adapter.generate_mock_news(destination.city, language)
+            return [LocalNews(**n) for n in news_data]
+        except Exception as e:
+            logger.error(f"Gemini news also failed: {e}")
+            return []
+
     # ------------------------------------------------------------------
     # Fallbacks — static defaults when Gemini is unreachable
     # ------------------------------------------------------------------
 
     @staticmethod
     def _fallback_highlights(city: str) -> List[Highlight]:
-        """Return 5 generic highlights when AI generation fails"""
         return [
             Highlight(
                 id=f"H00{i}",
                 title=f"{city} Highlight {i}",
                 brief_description=f"Discover a must-see spot in {city}.",
-                long_description=f"This is one of the most popular places to visit in {city}. "
-                                 "Ask your cabin crew or check the local tourism office for details."
+                long_description=f"One of the most popular places to visit in {city}. "
+                                 "Ask your cabin crew for details."
             )
             for i in range(1, 6)
         ]
 
     @staticmethod
     def _fallback_restaurants(city: str) -> List[Restaurant]:
-        """Return 3 generic restaurants when AI generation fails"""
         cuisines = ["Local", "Mediterranean", "International"]
         return [
             Restaurant(
                 name=f"{city} Restaurant {i}",
                 cuisine=cuisines[i - 1],
-                brief_description=f"A popular {cuisines[i - 1].lower()} restaurant in {city}.",
-                long_description=f"Enjoy authentic {cuisines[i - 1].lower()} cuisine in the heart of {city}. "
-                                 "Check local reviews for the latest recommendations."
+                brief_description=f"Popular {cuisines[i - 1].lower()} restaurant in {city}.",
+                long_description=f"Enjoy authentic {cuisines[i - 1].lower()} cuisine in {city}."
             )
             for i in range(1, 4)
         ]
 
     @staticmethod
     def _fallback_transport() -> AirportTransport:
-        """Return a safe default transport option when AI generation fails"""
         return AirportTransport(
             destination="main_train_station",
             options=[
                 TransportOption(mode="taxi", estimated_duration_minutes=30, notes="Available at arrivals exit")
             ]
         )
-
-    def _translate_content(self, content: DestinationContent, language: str) -> DestinationContent:
-        """Translate content"""
-        try:
-            content_dict = content.model_dump()
-            translated = gemini_adapter.translate_content(content_dict, language)
-            return DestinationContent(**translated)
-        except Exception as e:
-            logger.error(f"Translation failed: {e}")
-            return content
 
 
 # Singleton instance

@@ -46,5 +46,5 @@ class PromptConfig:
     TRANSPORT_OPTIONS_MAX = 3
     NEWS_COUNT = 5
 
-    # Max output tokens — enough for 5 highlights + 3 restaurants, but capped for speed
-    MAX_OUTPUT_TOKENS = 4096
+    # Max output tokens — generous to avoid truncation, Gemini sometimes ignores word limits
+    MAX_OUTPUT_TOKENS = 8192

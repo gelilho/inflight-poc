@@ -31,3 +31,8 @@ ALLOWED_NEWS_CATEGORIES = ["sports", "culture", "events", "local_interest"]
 GEMINI_MODEL = "models/gemini-2.5-flash"  # Latest and fastest!
 GEMINI_TEMPERATURE = 0.7
 GEMINI_MAX_TOKENS = 2048
+
+# Startup pre-warming — generate content for these combos on boot
+# so the first UI request is instant (<50ms from cache)
+PREWARM_AIRPORTS = ["FCO", "LHR", "CDG"]
+PREWARM_LANGUAGES = ["es"]  # Add more if needed: ["es", "en", "it"]

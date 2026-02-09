@@ -189,6 +189,9 @@ class DestinationService:
             transport_data = gemini_adapter.generate_airport_transport(
                 destination.city, airport_code, language
             )
+            # Gemini sometimes returns creative mode names — normalize to train/bus/taxi
+            for t in transport_data:
+                t["mode"] = self._normalize_transport_mode(t.get("mode", "taxi"))
             transport_options = [TransportOption(**t) for t in transport_data]
             airport_transport = AirportTransport(
                 destination="main_train_station",
@@ -251,6 +254,16 @@ class DestinationService:
             )
             for i in range(1, 4)
         ]
+
+    @staticmethod
+    def _normalize_transport_mode(raw: str) -> str:
+        """Map Gemini's creative mode names to valid values: train, bus, taxi."""
+        raw_lower = raw.lower()
+        if any(k in raw_lower for k in ("train", "tren", "metro", "rail", "line")):
+            return "train"
+        if any(k in raw_lower for k in ("bus", "autobús", "shuttle", "coach")):
+            return "bus"
+        return "taxi"
 
     @staticmethod
     def _fallback_weather() -> List[WeatherForecast]:

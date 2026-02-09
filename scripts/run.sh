@@ -34,7 +34,18 @@ if [[ "${1:-}" == "--install" ]]; then
   echo ""
 fi
 
-# ─── 3. Start FastAPI ──────────────────────────────────────
+# ─── 3. Read prewarm config (if demo-config.json exists nearby) ──
+
+UI_CONFIG="../inflight-ui-poc/scripts/demo-config.json"
+if [[ -f "$UI_CONFIG" ]] && command -v python3 &> /dev/null; then
+  export PREWARM_AIRPORTS=$(python3 -c "import json; print(json.load(open('$UI_CONFIG')).get('prewarm_airports','FCO'))")
+  export PREWARM_LANGUAGES=$(python3 -c "import json; print(json.load(open('$UI_CONFIG')).get('prewarm_languages','en,es,it'))")
+  echo "📋 Pre-warm config from demo-config.json:"
+  echo "   Airports:  $PREWARM_AIRPORTS"
+  echo "   Languages: $PREWARM_LANGUAGES"
+fi
+
+# ─── 4. Start FastAPI ──────────────────────────────────────
 
 echo ""
 echo "🚀 Starting API on http://localhost:8000"

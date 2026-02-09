@@ -111,7 +111,10 @@ class GeminiAdapter:
             )
             text = response.text.strip()
             elapsed = round((time.perf_counter() - start) * 1000)
-            logger.info(f"  ⬇ GEMINI RESPONSE — {elapsed}ms, response_chars={len(text)}")
+            # Show first 120 chars of response to prove dynamic content
+            preview = text[:120].replace("\n", " ")
+            logger.info(f"  ⬇ GEMINI RESPONSE — {elapsed}ms, {len(text)} chars")
+            logger.info(f"  📝 Preview: {preview}...")
             return text
         except Exception as e:
             elapsed = round((time.perf_counter() - start) * 1000)

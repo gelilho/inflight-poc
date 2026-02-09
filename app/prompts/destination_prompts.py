@@ -71,7 +71,8 @@ class TransportPrompt(BasePrompt):
         lang = LANG_NAMES.get(language, "English")
         return f"""Transport options from {airport_code} airport to {city} center. Write in {lang}.
 
-1-3 modes (train, bus, taxi). Include duration, cost, frequency.
+1-3 modes. IMPORTANT: mode MUST be exactly one of: "train", "bus", "taxi" (no other values).
+Include duration and useful notes (cost, frequency, tips).
 
 {BasePrompt.json_output_rules()}
 

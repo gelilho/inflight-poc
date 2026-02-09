@@ -41,7 +41,7 @@ All of this is returned by a single endpoint: `GET /api/v1/inflight-experience/{
 | **Weather** | OpenWeatherMap API (real data with mock fallback) |
 | **News** | NewsAPI.org (real articles, Python-side safety filtering, Gemini fallback) |
 | **Data** | Pydantic v2 schemas, CSV mock data via pandas |
-| **Testing** | pytest + pytest-cov (99 tests, 81% coverage) |
+| **Testing** | pytest + pytest-cov (108 tests, 77% coverage) |
 | **Languages** | 6 supported: es, en, fr, it, ca, gl |
 
 ---
@@ -108,7 +108,7 @@ app/
   services/         Business logic layer
 config/             Settings, constants, env template
 data/               CSV mock data + loaders
-tests/              99 tests (unit + integration)
+tests/              108 tests (unit + integration)
 scripts/            run, test, cleanup, health check
 business-docs/      PRD, pitch, architecture docs
 ```
@@ -148,8 +148,8 @@ HTML report is generated at `htmlcov/index.html`.
 
 ```
 ---------- coverage ----------
-TOTAL    664    128    81%
-99 passed, 0 warnings
+TOTAL    849    197    77%
+108 passed, 0 warnings
 ```
 
 ---
@@ -165,16 +165,55 @@ TOTAL    664    128    81%
 
 ---
 
+## Performance
+
+| Optimisation | Impact |
+|---|---|
+| **Direct language generation** | Gemini generates content directly in the target language — eliminates a separate translation step (~15-20s saved) |
+| **Shorter prompts** | Prompts cut ~70%, lower temperatures (0.4 creative, 0.3 factual) — faster Gemini responses |
+| **In-memory cache** | Content, weather, and news cached by `(airport_code, language)` — cache hit <50ms |
+| **Startup pre-warming** | On API boot, a background thread pre-generates content for FCO, LHR, CDG in Spanish — first UI request is instant |
+| **max_output_tokens** | Capped at 8192 to prevent Gemini from over-generating |
+
+### Typical Gemini Latency (cold call)
+
+| Call | Time |
+|---|---|
+| Highlights (en) | ~10s |
+| Highlights (es) | ~20s |
+| Restaurants | ~9s |
+| Transport | ~6s |
+| News | ~9s |
+
+With pre-warming cache: **<50ms** for pre-warmed destinations.
+
+---
+
+## Observability
+
+End-to-end tracing across all layers:
+
+| Layer | What's logged |
+|---|---|
+| **Endpoints** | `⬆ GET /path` on request, `⬇ 200 /path (42ms)` on response — every endpoint timed |
+| **Gemini adapter** | Model, temperature, prompt size → response time + response chars |
+| **Weather adapter** | OpenWeatherMap request/response, live vs mock, status code, timing |
+| **News adapter** | NewsAPI.org request/response, total results, safety filter stats, timing |
+| **Destination service** | Cache HIT/MISS, per-step Gemini timing (highlights, restaurants, transport) |
+| **Frontend (api.ts)** | Color-coded console: blue requests, green success, red errors, orange timing, purple payload size |
+
+---
+
 ## Resilience
 
 Every external dependency has a fallback:
 
 | Source | Primary | Fallback |
 |---|---|---|
-| Destination content | Gemini AI | Static defaults (5 highlights, 3 restaurants, taxi) |
+| Destination content | Gemini AI (direct in target language) + in-memory cache | Static defaults (5 highlights, 3 restaurants, taxi) |
 | Weather | OpenWeatherMap API | Mock forecast data |
-| News | NewsAPI.org | Gemini-generated safe news |
-| Translation | Gemini AI | Returns English original |
+| News | NewsAPI.org (safety filtered) | Gemini-generated safe news |
+| Translation | Generated directly in target language (no separate step) | Gemini translate_content (legacy fallback) |
 
 ---
 

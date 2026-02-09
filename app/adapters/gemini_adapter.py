@@ -2,9 +2,10 @@
 Gemini Adapter — speed-optimised.
 
 Changes for speed:
-- max_output_tokens capped at 2048
+- max_output_tokens capped at 8192 (via PromptConfig.MAX_OUTPUT_TOKENS)
 - Prompts generate content directly in the target language
 - No separate translation call needed for destination content
+- Per-call timing + prompt/response size logging
 """
 
 import google.generativeai as genai

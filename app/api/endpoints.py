@@ -1,6 +1,6 @@
 """FastAPI endpoints - Resource-oriented API design"""
 
-from fastapi import APIRouter, HTTPException, Path, Request
+from fastapi import APIRouter, HTTPException, Path
 from app.models.schemas import (
     Passenger, Booking, Flight, DestinationContent,
     WeatherForecast, LocalNews, InflightExperience
@@ -10,7 +10,7 @@ from app.services.flight_service import flight_service
 from app.services.destination_service import destination_service
 from app.services.inflight_service import inflight_service
 from config.constants import SUPPORTED_LANGUAGES
-from typing import List
+from typing import List, Optional
 import logging
 import time
 
@@ -19,13 +19,13 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-def _log_request(method: str, path: str, params: dict = None):
+def _log_request(method: str, path: str, params: Optional[dict] = None) -> None:
     """Log incoming request"""
     extra = f" params={params}" if params else ""
     logger.info(f"⬆ {method} {path}{extra}")
 
 
-def _log_response(method: str, path: str, status: int, elapsed_ms: int, detail: str = ""):
+def _log_response(method: str, path: str, status: int, elapsed_ms: int, detail: str = "") -> None:
     """Log outgoing response with timing"""
     extra = f" — {detail}" if detail else ""
     logger.info(f"⬇ {status} {path} ({elapsed_ms}ms){extra}")

@@ -39,7 +39,7 @@ All of this is returned by a single endpoint: `GET /api/v1/inflight-experience/{
 | **Framework** | FastAPI (Python 3.11) |
 | **AI Engine** | Google Gemini 2.5 Flash — generates ALL content (highlights, restaurants, transport, weather, news) |
 | **Data** | Pydantic v2 schemas, CSV mock data via pandas |
-| **Testing** | pytest + pytest-cov (107 tests, 73% coverage) |
+| **Testing** | pytest + pytest-cov (133 tests, 82% coverage) |
 | **Languages** | 6 supported: es, en, fr, it, ca, gl |
 
 ---
@@ -106,7 +106,7 @@ app/
   services/         Business logic layer
 config/             Settings, constants, env template
 data/               CSV mock data + loaders
-tests/              107 tests (unit + integration)
+tests/              133 tests (unit + integration)
 scripts/            run, test, cleanup, health check
 business-docs/      PRD, pitch, architecture docs
 ```
@@ -146,8 +146,8 @@ HTML report is generated at `htmlcov/index.html`.
 
 ```
 ---------- coverage ----------
-TOTAL    860    235    73%
-107 passed, 0 warnings
+TOTAL    902    163    82%
+133 passed, 0 warnings
 ```
 
 ---
@@ -219,12 +219,21 @@ Every external dependency has a fallback:
 | Phase | Scope | When |
 |---|---|---|
 | **PoC** (done) | Destination + flight + weather + news, 3 cities, 6 langs | Feb 2026 |
-| **Phase 1** | Mobile app + flight tracker + digital magazine | Q2 2026 |
+| **Phase 1** | Mobile app + flight tracker + digital magazine + **FAQ** | Q2 2026 |
 | **Phase 2** | Food pre-order + onboard ordering + payments | Q3 2026 |
-| **Phase 3** | Music playlists + full route network | Q4 2026 |
+| **Phase 3** | **Music playlists** + full route network | Q4 2026 |
 | **Phase 4** | Personalisation engine (history, preferences, loyalty) | 2027 |
 
 See [business-docs/ONE_PAGER.md](business-docs/ONE_PAGER.md) for the full product vision.
+
+---
+
+## Backlog (Next Features)
+
+| Feature | Description | AI Engine | Phase |
+|---|---|---|---|
+| **FAQ & Help** | Searchable Vueling FAQ — baggage rules, check-in, loyalty, rebooking. Reduces call center volume. Future: conversational AI FAQ. | Gemini (RAG over Vueling knowledge base) | Phase 1 |
+| **Music & Audio** | AI-curated playlists per destination — local artists, global hits, mixed decades. Moods: chill, upbeat, focus, local vibes. Refreshed weekly. Inflight-safe (no explicit content). | Gemini (curation engine) | Phase 3 |
 
 ---
 

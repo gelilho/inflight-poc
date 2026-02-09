@@ -19,7 +19,7 @@ from app.adapters.gemini_adapter import gemini_adapter
 # from app.adapters.weather_adapter import weather_adapter
 # from app.adapters.news_adapter import news_adapter
 from data.loaders.csv_loader import csv_loader
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple
 import logging
 import time
 
@@ -90,21 +90,21 @@ class DestinationService:
         return forecasts
 
     def get_news(self, airport_code: str, language: str = "en") -> List[LocalNews]:
-        """Get news — from cache if available"""
+        """Get news — from cache if available, else generate with Gemini"""
         cache_key = (airport_code, language)
 
         if cache_key in self._news_cache:
             logger.info(f"CACHE HIT: news {airport_code}/{language}")
             return self._news_cache[cache_key]
 
-        logger.info(f"CACHE MISS: fetching news {airport_code}/{language}")
+        logger.info(f"CACHE MISS: generating news {airport_code}/{language} via Gemini")
         start = time.perf_counter()
 
-        news_items = self._fetch_news(airport_code, language)
+        news_items = self._generate_news(airport_code, language)
         self._news_cache[cache_key] = news_items
 
         elapsed = round((time.perf_counter() - start) * 1000)
-        logger.info(f"News fetched in {elapsed}ms — cached")
+        logger.info(f"News generated in {elapsed}ms — cached")
 
         return news_items
 
@@ -112,7 +112,7 @@ class DestinationService:
     # Pre-warming (called from app startup)
     # ------------------------------------------------------------------
 
-    def prewarm(self, airports: List[str], languages: List[str]):
+    def prewarm(self, airports: List[str], languages: List[str]) -> None:
         """Pre-generate and cache content for given airport+language combos.
 
         Called on API startup so the first UI request is instant.
@@ -240,7 +240,7 @@ class DestinationService:
             airport_transport=airport_transport
         )
 
-    def _fetch_news(self, airport_code: str, language: str) -> List[LocalNews]:
+    def _generate_news(self, airport_code: str, language: str) -> List[LocalNews]:
         """Generate news with Gemini directly in the target language"""
         dest_info = csv_loader.get_destination_info(airport_code)
         if not dest_info:

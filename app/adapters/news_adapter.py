@@ -6,6 +6,7 @@ from config.settings import get_settings
 from config.constants import CITY_COUNTRY_CODES
 from datetime import datetime, timedelta
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -20,16 +21,21 @@ class NewsAdapter:
     
     def get_local_news(self, city: str, limit: int = 5) -> List[Dict]:
         """Get local news from NewsAPI"""
-        
+        start = time.perf_counter()
+        logger.info(f"⬆ NEWS REQUEST — city={city} limit={limit}")
+
         # Check if we have API key
         if not self.settings.news_api_key or self.settings.use_mock_data:
-            logger.warning("Using mock news data (no API key or mock mode enabled)")
-            return self._get_mock_news(city, limit)
-        
+            logger.warning("  ↩ Using mock news data (no API key or mock mode enabled)")
+            result = self._get_mock_news(city, limit)
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"⬇ NEWS RESPONSE (mock) — {elapsed}ms, {len(result)} items")
+            return result
+
         try:
             # Get country code
             country = self.city_countries.get(city, "us")
-            
+
             # Search for recent news about the city
             params = {
                 "q": city,
@@ -39,16 +45,24 @@ class NewsAdapter:
                 "apiKey": self.settings.news_api_key,
                 "from": (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
             }
-            
+
+            logger.info(f"  ⬆ NewsAPI.org — q={city} country={country}")
             response = requests.get(self.base_url, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
-            
-            # Process and filter articles
-            return self._process_api_news(data, limit)
-        
+
+            total_results = data.get("totalResults", 0)
+            articles_received = len(data.get("articles", []))
+            logger.info(f"  ⬇ NewsAPI.org — status={response.status_code}, totalResults={total_results}, received={articles_received}")
+
+            result = self._process_api_news(data, limit)
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"⬇ NEWS RESPONSE (live) — {elapsed}ms, {len(result)} items (after safety filter)")
+            return result
+
         except Exception as e:
-            logger.error(f"News API error: {e}, falling back to mock data")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.error(f"  ✖ News API error ({elapsed}ms): {e}, falling back to mock data")
             return self._get_mock_news(city, limit)
     
     def _process_api_news(self, data: dict, limit: int) -> List[Dict]:

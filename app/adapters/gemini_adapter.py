@@ -18,6 +18,7 @@ from app.prompts.translation_prompts import TranslationPrompt
 from app.prompts.base_prompts import PromptConfig
 import json
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +83,9 @@ class GeminiAdapter:
 
     def _call_gemini(self, prompt: str, temperature: float) -> str:
         """Make API call to Gemini with max_output_tokens for speed"""
+        start = time.perf_counter()
+        prompt_len = len(prompt)
+        logger.info(f"  ⬆ GEMINI REQUEST — model={GEMINI_MODEL} temp={temperature} prompt_chars={prompt_len}")
         try:
             response = self.model.generate_content(
                 prompt,
@@ -90,9 +94,13 @@ class GeminiAdapter:
                     max_output_tokens=PromptConfig.MAX_OUTPUT_TOKENS,
                 )
             )
-            return response.text.strip()
+            text = response.text.strip()
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"  ⬇ GEMINI RESPONSE — {elapsed}ms, response_chars={len(text)}")
+            return text
         except Exception as e:
-            logger.error(f"Gemini API call failed: {e}")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.error(f"  ✖ GEMINI ERROR — {elapsed}ms: {e}")
             raise
 
     def _parse_json_response(self, text: str) -> Any:

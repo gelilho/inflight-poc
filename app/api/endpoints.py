@@ -1,6 +1,6 @@
 """FastAPI endpoints - Resource-oriented API design"""
 
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path, Request
 from app.models.schemas import (
     Passenger, Booking, Flight, DestinationContent,
     WeatherForecast, LocalNews, InflightExperience
@@ -12,10 +12,23 @@ from app.services.inflight_service import inflight_service
 from config.constants import SUPPORTED_LANGUAGES
 from typing import List
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+
+def _log_request(method: str, path: str, params: dict = None):
+    """Log incoming request"""
+    extra = f" params={params}" if params else ""
+    logger.info(f"⬆ {method} {path}{extra}")
+
+
+def _log_response(method: str, path: str, status: int, elapsed_ms: int, detail: str = ""):
+    """Log outgoing response with timing"""
+    extra = f" — {detail}" if detail else ""
+    logger.info(f"⬇ {status} {path} ({elapsed_ms}ms){extra}")
 
 
 # ============================================================
@@ -84,11 +97,18 @@ async def get_passenger(
     
     Returns: name, frequent flyer number, preferred language
     """
+    start = time.perf_counter()
+    path = f"/api/v1/passenger/{user_id}"
+    _log_request("GET", path)
     try:
-        return passenger_service.get_passenger(user_id)
+        result = passenger_service.get_passenger(user_id)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000))
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching passenger: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
@@ -106,11 +126,18 @@ async def get_passenger_bookings(
     
     Returns: list of bookings with flight details, seats, dates
     """
+    start = time.perf_counter()
+    path = f"/api/v1/passenger/{user_id}/bookings"
+    _log_request("GET", path)
     try:
-        return passenger_service.get_passenger_bookings(user_id)
+        result = passenger_service.get_passenger_bookings(user_id)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000), f"{len(result)} bookings")
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching bookings: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
@@ -134,11 +161,18 @@ async def get_booking(
     
     **This is what passengers scan from their boarding pass.**
     """
+    start = time.perf_counter()
+    path = f"/api/v1/booking/{booking_number}"
+    _log_request("GET", path)
     try:
-        return passenger_service.get_booking(booking_number)
+        result = passenger_service.get_booking(booking_number)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000))
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching booking: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
@@ -169,11 +203,18 @@ async def get_flight(
     - Cabin crew (3 members)
     - Gates, times, duration
     """
+    start = time.perf_counter()
+    path = f"/api/v1/flight/{flight_number}/{date}"
+    _log_request("GET", path)
     try:
-        return flight_service.get_flight(flight_number, date)
+        result = flight_service.get_flight(flight_number, date)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000))
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching flight: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
@@ -211,12 +252,19 @@ async def get_destination_content(
             detail=f"Unsupported language: {language}. Supported: {SUPPORTED_LANGUAGES}"
         )
     
+    start = time.perf_counter()
+    path = f"/api/v1/destination/{airport_code}/content/{language}"
+    _log_request("GET", path)
     try:
-        logger.info(f"Starting destination content generation for {airport_code} in {language}")
-        return destination_service.get_destination_content(airport_code, language)
+        result = destination_service.get_destination_content(airport_code, language)
+        elapsed = round((time.perf_counter() - start) * 1000)
+        _log_response("GET", path, 200, elapsed, f"highlights={len(result.highlights)} restaurants={len(result.restaurants)}")
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching destination content: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
@@ -247,9 +295,15 @@ async def get_weather(
             detail=f"Unsupported language: {language}. Supported: {SUPPORTED_LANGUAGES}"
         )
     
+    start = time.perf_counter()
+    path = f"/api/v1/destination/{airport_code}/weather/{language}"
+    _log_request("GET", path)
     try:
-        return destination_service.get_weather(airport_code, language)
+        result = destination_service.get_weather(airport_code, language)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000), f"{len(result)} days")
+        return result
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching weather: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch weather")
 
@@ -287,9 +341,15 @@ async def get_news(
             detail=f"Unsupported language: {language}. Supported: {SUPPORTED_LANGUAGES}"
         )
     
+    start = time.perf_counter()
+    path = f"/api/v1/destination/{airport_code}/news/{language}"
+    _log_request("GET", path)
     try:
-        return destination_service.get_news(airport_code, language)
+        result = destination_service.get_news(airport_code, language)
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000), f"{len(result)} items")
+        return result
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error fetching news: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to fetch news: {str(e)}")
 
@@ -334,11 +394,18 @@ async def get_inflight_experience(
             detail=f"Unsupported language: {language}. Supported: {SUPPORTED_LANGUAGES}"
         )
     
+    start = time.perf_counter()
+    path = f"/api/v1/inflight-experience/{booking_number}/{language}"
+    _log_request("GET", path, {"booking": booking_number, "language": language})
     try:
-        logger.info(f"Starting BIG FLOW for {booking_number} in {language}")
-        return inflight_service.get_inflight_experience(booking_number, language)
+        result = inflight_service.get_inflight_experience(booking_number, language)
+        elapsed = round((time.perf_counter() - start) * 1000)
+        _log_response("GET", path, 200, elapsed, "BIG FLOW complete")
+        return result
     except ValueError as e:
+        _log_response("GET", path, 404, round((time.perf_counter() - start) * 1000), str(e))
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
         logger.error(f"Error generating inflight experience: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")

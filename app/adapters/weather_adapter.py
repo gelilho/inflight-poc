@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from config.settings import get_settings
 from config.constants import AIRPORT_COORDINATES
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -20,18 +21,26 @@ class WeatherAdapter:
     
     def get_forecast(self, airport_code: str, days: int = 3) -> List[Dict]:
         """Get weather forecast from OpenWeatherMap"""
-        
+        start = time.perf_counter()
+        logger.info(f"⬆ WEATHER REQUEST — airport={airport_code} days={days}")
+
         # Check if we have API key
         if not self.settings.weather_api_key or self.settings.use_mock_data:
-            logger.warning("Using mock weather data (no API key or mock mode enabled)")
-            return self._get_mock_forecast(days)
-        
+            logger.warning("  ↩ Using mock weather data (no API key or mock mode enabled)")
+            result = self._get_mock_forecast(days)
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"⬇ WEATHER RESPONSE (mock) — {elapsed}ms, {len(result)} days")
+            return result
+
         # Get coordinates
         coords = self.airport_coords.get(airport_code)
         if not coords:
-            logger.warning(f"No coordinates for {airport_code}, using mock data")
-            return self._get_mock_forecast(days)
-        
+            logger.warning(f"  ↩ No coordinates for {airport_code}, using mock data")
+            result = self._get_mock_forecast(days)
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"⬇ WEATHER RESPONSE (mock) — {elapsed}ms, {len(result)} days")
+            return result
+
         try:
             # Call OpenWeatherMap API
             params = {
@@ -41,16 +50,20 @@ class WeatherAdapter:
                 "units": "metric",  # Celsius
                 "cnt": days * 8     # 8 forecasts per day (3-hour intervals)
             }
-            
+
+            logger.info(f"  ⬆ OpenWeatherMap API — lat={coords['lat']} lon={coords['lon']}")
             response = requests.get(self.base_url, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
-            
-            # Process forecast data (group by day)
-            return self._process_api_forecast(data, days)
-        
+
+            result = self._process_api_forecast(data, days)
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"⬇ WEATHER RESPONSE (live) — {elapsed}ms, status={response.status_code}, {len(result)} days")
+            return result
+
         except Exception as e:
-            logger.error(f"Weather API error: {e}, falling back to mock data")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.error(f"  ✖ Weather API error ({elapsed}ms): {e}, falling back to mock data")
             return self._get_mock_forecast(days)
     
     def _process_api_forecast(self, data: dict, days: int) -> List[Dict]:

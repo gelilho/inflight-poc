@@ -21,9 +21,9 @@ Three principles drive every decision:
 |                        (Scheduled / Batch Jobs)                           |
 |                                                                           |
 |  +-------------+  +-------------+  +-------------+  +----------------+   |
-|  | DESTINATION  |  | FLIGHT      |  | NEWS        |  | MUSIC          |   |
-|  | CONTENT      |  | DETAILS     |  | AGGREGATOR  |  | CURATOR        |   |
-|  | GENERATOR    |  | UPDATER     |  |             |  |                |   |
+|  | DESTINATION  |  | FLIGHT      |  | NEWS +      |  | MUSIC          |   |
+|  | CONTENT      |  | DETAILS     |  | WEATHER     |  | CURATOR        |   |
+|  | GENERATOR    |  | UPDATER     |  | (Gemini AI) |  |                |   |
 |  +------+------+  +------+------+  +------+------+  +-------+-------+   |
 |         |                |                |                  |            |
 |    Every 2 weeks    Daily (crew/     Every 6 hours      Weekly           |
@@ -119,8 +119,8 @@ The key insight: **we don't generate content per-passenger or per-request.** We 
 | **Transport Options** | Same as highlights | Every **2 weeks** | Gemini 2.5 Flash | CDN + Device Cache |
 | **Emergency Contacts** | Manually maintained | On change only | N/A (static data) | CDN + Device Cache |
 | **Flight Details** (crew, aircraft) | Daily crew/aircraft allocation | **Daily** (batch at 06:00) | N/A (from ops system) | CDN + Device Cache |
-| **Weather Forecast** | Scheduled job | Every **12 hours** | OpenWeatherMap API | CDN + Device Cache |
-| **News Headlines** | Scheduled job | Every **6 hours** | NewsAPI + Gemini filter | CDN + Device Cache |
+| **Weather Forecast** | Scheduled job | Every **12 hours** | Gemini 2.5 Flash | CDN + Device Cache |
+| **News Headlines** | Scheduled job | Every **6 hours** | Gemini 2.5 Flash (safety rules) | CDN + Device Cache |
 | **Digital Magazine** | Editorial + AI assisted | **Weekly** new articles | Gemini + Editorial | CDN + Device Cache |
 | **Music Playlists** | AI curation engine | **Weekly** per mood/dest | AI Music Curation | CDN + Audio Cache |
 | **Translations** | After any content refresh | Triggered by content update | Gemini 2.5 Flash | CDN + Device Cache |
@@ -266,9 +266,7 @@ INPUTS                          AI CURATION                     OUTPUT
 | **Aircraft Assignment System** | Batch file / API | Read | Daily at 06:00 |
 | **Catering System** | API | Write (manifests) | T-6h before flight |
 | **Payment Gateway** (Stripe/Adyen) | API | Bidirectional | Real-time per order |
-| **Google Gemini** | API | Read | Per content refresh cycle |
-| **OpenWeatherMap** | API | Read | Every 12 hours |
-| **NewsAPI.org** | API | Read | Every 6 hours |
+| **Google Gemini** | API | Read | Per content refresh cycle (all content, weather, news) |
 | **Apple APNS / Google FCM** | Push | Write | T-24h silent push |
 | **Onboard Edge Cache** | File sync | Write | Pre-departure at gate |
 | **Analytics Platform** | Events | Write | Continuous (batched) |
@@ -305,9 +303,7 @@ INPUTS                          AI CURATION                     OUTPUT
 
 | Component | Cost | Notes |
 |---|---|---|
-| AI content generation | ~0.001 EUR | Amortized across all passengers on route |
-| Weather API | ~0.0001 EUR | Amortized (cached per destination) |
-| News API | ~0.0001 EUR | Amortized (cached per destination) |
+| AI content generation (all) | ~0.002 EUR | Amortized across all passengers on route (includes weather + news) |
 | Silent push notification | ~0.0001 EUR | Standard push costs |
 | Satellite bandwidth | ~0.002 EUR | Only tracker + orders (~370 KB/flight) |
 | CDN storage + delivery | ~0.001 EUR | Pre-cached content delivery |

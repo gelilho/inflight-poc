@@ -1,11 +1,9 @@
 """
-Gemini Adapter — speed-optimised.
+Gemini Adapter — single AI engine for all content.
 
-Changes for speed:
-- max_output_tokens capped at 8192 (via PromptConfig.MAX_OUTPUT_TOKENS)
-- Prompts generate content directly in the target language
-- No separate translation call needed for destination content
-- Per-call timing + prompt/response size logging
+Gemini generates everything: highlights, restaurants, transport, weather, news.
+No external APIs needed (OpenWeatherMap, NewsAPI removed) — simpler, fewer deps.
+Per-call timing + prompt/response size logging.
 """
 
 import google.generativeai as genai
@@ -13,7 +11,7 @@ from typing import Dict, Any, List
 from config.settings import get_settings
 from config.constants import GEMINI_MODEL
 from app.prompts.destination_prompts import (
-    HighlightsPrompt, RestaurantsPrompt, TransportPrompt, NewsPrompt
+    HighlightsPrompt, RestaurantsPrompt, TransportPrompt, NewsPrompt, WeatherPrompt
 )
 from app.prompts.translation_prompts import TranslationPrompt
 from app.prompts.base_prompts import PromptConfig
@@ -62,8 +60,21 @@ class GeminiAdapter:
         response = self._call_gemini(prompt, temperature)
         return self._parse_json_response(response)
 
-    def generate_mock_news(self, city: str, language: str = "en") -> List[Dict[str, str]]:
-        """Generate safe local news — directly in the target language"""
+    def generate_weather(self, city: str, language: str = "en") -> List[Dict[str, Any]]:
+        """Generate realistic 3-day weather forecast — via Gemini"""
+        logger.info(f"Generating weather for {city} in {language}")
+
+        prompt = WeatherPrompt.build(city, language)
+        temperature = WeatherPrompt.temperature()
+
+        response = self._call_gemini(prompt, temperature)
+        return self._parse_json_response(response)
+
+    def generate_news(self, city: str, language: str = "en") -> List[Dict[str, str]]:
+        """Generate safe local news — directly in the target language.
+
+        Also accessible as generate_mock_news() for backward compatibility.
+        """
         logger.info(f"Generating news for {city} in {language}")
 
         prompt = NewsPrompt.build(city, language)
@@ -71,6 +82,9 @@ class GeminiAdapter:
 
         response = self._call_gemini(prompt, temperature)
         return self._parse_json_response(response)
+
+    # Backward-compatible alias
+    generate_mock_news = generate_news
 
     def translate_content(self, content: Dict[str, Any], target_language: str) -> Dict[str, Any]:
         """Translate content using structure-preserving prompt (fallback only)"""

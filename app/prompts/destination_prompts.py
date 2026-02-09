@@ -105,3 +105,26 @@ Exactly 5 items. Mix categories."""
     @staticmethod
     def temperature() -> float:
         return PromptConfig.FACTUAL_TEMPERATURE
+
+
+class WeatherPrompt(BasePrompt):
+    """Generate a realistic 3-day weather forecast for a destination"""
+
+    @staticmethod
+    def build(city: str, language: str = "en") -> str:
+        lang = LANG_NAMES.get(language, "English")
+        return f"""Generate a realistic 3-day weather forecast for {city} starting from today. Write in {lang}.
+
+Use typical weather patterns for this city and time of year. Be realistic with temperatures.
+Conditions should be one of: Sunny, Partly Cloudy, Cloudy, Clear, Rain, Light Rain, Overcast, Windy.
+
+{BasePrompt.json_output_rules()}
+
+Return JSON array:
+[{{"date":"YYYY-MM-DD","condition":"...","min_temperature_c":10.0,"max_temperature_c":18.0}}, ... ]
+
+Exactly 3 days. Use today and next 2 days as dates."""
+
+    @staticmethod
+    def temperature() -> float:
+        return PromptConfig.FACTUAL_TEMPERATURE

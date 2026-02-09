@@ -224,9 +224,17 @@ class TestDestinationService:
         with pytest.raises(ValueError, match="Destination not found"):
             self.service.get_destination_content("XXX", "en")
 
-    @patch("app.services.destination_service.weather_adapter")
-    def test_get_weather_returns_forecasts(self, mock_weather):
-        mock_weather.get_forecast.return_value = [
+    @patch("app.services.destination_service.gemini_adapter")
+    @patch("app.services.destination_service.csv_loader")
+    def test_get_weather_returns_forecasts(self, mock_loader, mock_gemini):
+        mock_loader.get_destination_info.return_value = {
+            "destination": Destination(city="Rome", country="Italy", airport_code="FCO"),
+            "emergency_contacts": EmergencyContacts(
+                police="112", ambulance="118", fire="115",
+                radio_taxi="+39", airport_info="+39", vueling_contact="+34"
+            )
+        }
+        mock_gemini.generate_weather.return_value = [
             {"date": "2026-02-07", "condition": "Sunny",
              "min_temperature_c": 12.0, "max_temperature_c": 22.0},
             {"date": "2026-02-08", "condition": "Cloudy",
@@ -237,3 +245,4 @@ class TestDestinationService:
         result = self.service.get_weather("FCO", "en")
         assert len(result) == 3
         assert result[0].condition == "Sunny"
+        mock_gemini.generate_weather.assert_called_once_with("Rome", "en")

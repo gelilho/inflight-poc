@@ -3,10 +3,10 @@
 inflight-poc/
 │
 ├── app/                          # Main application code
-│   ├── adapters/                 # External API integrations
-│   │   ├── gemini_adapter.py     # Google Gemini LLM
-│   │   ├── weather_adapter.py    # OpenWeatherMap
-│   │   └── news_adapter.py       # NewsAPI.org
+│   ├── adapters/                 # AI engine
+│   │   ├── gemini_adapter.py     # Google Gemini 2.5 Flash (ALL content)
+│   │   ├── weather_adapter.py    # (legacy — not used, Gemini generates weather)
+│   │   └── news_adapter.py       # (legacy — not used, Gemini generates news)
 │   │
 │   ├── api/                      # FastAPI endpoints
 │   │   └── endpoints.py          # All REST endpoints
@@ -86,7 +86,7 @@ scripts/run_tests.sh
 python -m pytest tests/unit/ -v
 python -m pytest tests/integration/ -v
 
-# Live API tests (real calls to Gemini/Weather/News)
+# Live API tests (real calls to Gemini)
 python -m pytest -m live -v
 
 # cURL endpoint smoke tests (requires server running)

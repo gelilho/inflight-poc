@@ -54,9 +54,7 @@ async def root():
         "documentation": "/docs",
         "supported_languages": SUPPORTED_LANGUAGES,
         "data_sources": {
-            "ai_content": "Google Gemini 2.5 Flash",
-            "weather": "OpenWeatherMap API (fallback: mock data)",
-            "news": "NewsAPI.org (fallback: Gemini-generated)"
+            "ai_engine": "Google Gemini 2.5 Flash (generates ALL content: highlights, restaurants, transport, weather, news, translations)"
         },
         "endpoints": {
             "passenger": "/api/v1/passenger/{user_id}",
@@ -280,13 +278,11 @@ async def get_weather(
 ):
     """
     Get 3-day weather forecast for destination.
-    
-    **Data Source:** 
-    - Primary: OpenWeatherMap API (real weather data)
-    - Fallback: Mock data (if API unavailable or key invalid)
-    
-    **Translation:** Weather conditions translated to specified language
-    
+
+    **Data Source:** Google Gemini 2.5 Flash (realistic forecast for the city and season)
+
+    **Fallback:** Static 3-day forecast if Gemini is unavailable
+
     Returns: 3-day forecast with min/max temperatures (°C) and conditions
     """
     if language not in SUPPORTED_LANGUAGES:
@@ -319,21 +315,14 @@ async def get_news(
 ):
     """
     Get 5 local news headlines for destination.
-    
-    **Data Source:**
-    - Primary: NewsAPI.org (real news articles from last 7 days)
-    - Filtering: Python code filters out dramatic/violent content for inflight safety
-    - Fallback: Google Gemini generates safe, relevant news (if API unavailable)
-    
-    **Translation:** All news content translated to specified language
-    
-    **Content Safety:** 
+
+    **Data Source:** Google Gemini 2.5 Flash — generates positive, safe local news
+
+    **Content Safety (enforced in prompt):**
     - Excludes: violence, crime, disasters, terrorism
     - Includes: sports, culture, events, local interest
-    
+
     Returns: 5 news items with title, brief + long descriptions, and category
-    
-    **Note:** First call may take 10-15 seconds if using Gemini fallback.
     """
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(
@@ -373,14 +362,11 @@ async def get_inflight_experience(
     Combines:
     - Booking details (seat, baggage, airports)
     - Flight details (aircraft, crew, gates)
-    - Destination content (highlights, restaurants, emergency contacts) - AI-generated
-    - Weather forecast (OpenWeatherMap or mock)
-    - Local news (NewsAPI or Gemini fallback)
-    
-    **Data Sources:**
-    - AI Content: Google Gemini 2.5 Flash
-    - Weather: OpenWeatherMap API (fallback: mock)
-    - News: NewsAPI.org (fallback: Gemini)
+    - Destination content (highlights, restaurants, emergency contacts)
+    - Weather forecast (3-day)
+    - Local news (5 headlines)
+
+    **AI Engine:** Google Gemini 2.5 Flash generates ALL content, weather, and news
     
     **Translation:** All content in specified language
     

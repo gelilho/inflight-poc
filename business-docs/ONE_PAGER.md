@@ -121,8 +121,8 @@ Content is **never generated per-request**. Instead, it is produced on scheduled
 |---|---|---|
 | Destination highlights, restaurants, transport | Every **2 weeks** per destination | Google Gemini AI |
 | Flight details (crew, aircraft) | **Daily** — when crew and aircraft are allocated to flights | Airline operations systems |
-| Weather forecast | Every **12 hours** | OpenWeatherMap API |
-| Local news | Every **6 hours** (filtered for inflight safety) | NewsAPI.org + AI filtering |
+| Weather forecast | Every **12 hours** | Google Gemini AI |
+| Local news | Every **6 hours** (filtered for inflight safety) | Google Gemini AI (safety rules in prompt) |
 | Music playlists | **Weekly** — curated by mood and destination, mixing decades and local artists | AI Music Curation Engine |
 | Digital magazine articles | **Weekly** — AI-assisted editorial | Gemini + Editorial team |
 | Food menu | **Weekly** or per season | Catering team |
@@ -163,8 +163,7 @@ This architecture ensures the experience is **always fast, always available, and
 
 - 3 destinations: Rome (FCO), London (LHR), Paris (CDG)
 - 6 languages fully supported
-- AI content engine (Google Gemini 2.5 Flash)
-- Live news (NewsAPI.org) + weather (OpenWeatherMap)
+- Single AI engine (Google Gemini 2.5 Flash) generates ALL content, weather, and news
 - Complete API: one call returns the full experience
 - All endpoints tested and working
 - Ready for MWC demo

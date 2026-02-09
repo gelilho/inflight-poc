@@ -118,35 +118,62 @@ class DestinationService:
         Called on API startup so the first UI request is instant.
         """
         total = len(airports) * len(languages)
-        logger.info(f"🔥 PRE-WARMING CACHE: {len(airports)} airports × {len(languages)} languages = {total} combos")
+        logger.info("")
+        logger.info("=" * 60)
+        logger.info("🔥  PRE-WARMING CACHE")
+        logger.info(f"    {len(airports)} airport(s) × {len(languages)} language(s) = {total} combo(s)")
+        logger.info(f"    Airports:  {', '.join(airports)}")
+        logger.info(f"    Languages: {', '.join(languages)}")
+        logger.info("=" * 60)
         overall_start = time.perf_counter()
 
+        combo_idx = 0
         for airport_code in airports:
             for language in languages:
+                combo_idx += 1
                 tag = f"{airport_code}/{language}"
+
+                logger.info("")
+                logger.info(f"── [{combo_idx}/{total}] {tag} ──────────────────────────")
+
+                # 🏛️ Highlights + 🍝 Restaurants + 🚇 Transport (bundled in content)
                 try:
                     start = time.perf_counter()
                     self.get_destination_content(airport_code, language)
                     elapsed = round((time.perf_counter() - start) * 1000)
-                    logger.info(f"  ✅ {tag} content ready ({elapsed}ms)")
+                    logger.info(f"  🏛️  Highlights   ✅  ready")
+                    logger.info(f"  🍝  Restaurants  ✅  ready")
+                    logger.info(f"  🚇  Transport    ✅  ready")
+                    logger.info(f"       ⏱  Content total: {elapsed}ms")
                 except Exception as e:
-                    logger.error(f"  ❌ {tag} content failed: {e}")
+                    logger.error(f"  ❌  Content generation failed: {e}")
 
+                # 🌤️ Weather
                 try:
+                    start = time.perf_counter()
                     self.get_weather(airport_code, language)
-                    logger.info(f"  ✅ {tag} weather ready")
+                    elapsed = round((time.perf_counter() - start) * 1000)
+                    logger.info(f"  🌤️  Weather      ✅  ready ({elapsed}ms)")
                 except Exception as e:
-                    logger.error(f"  ❌ {tag} weather failed: {e}")
+                    logger.error(f"  🌤️  Weather      ❌  failed: {e}")
 
+                # 📰 News
                 try:
+                    start = time.perf_counter()
                     self.get_news(airport_code, language)
-                    logger.info(f"  ✅ {tag} news ready")
+                    elapsed = round((time.perf_counter() - start) * 1000)
+                    logger.info(f"  📰  News         ✅  ready ({elapsed}ms)")
                 except Exception as e:
-                    logger.error(f"  ❌ {tag} news failed: {e}")
+                    logger.error(f"  📰  News         ❌  failed: {e}")
 
         total_elapsed = round((time.perf_counter() - overall_start) * 1000)
         cached = len(self._content_cache)
-        logger.info(f"🔥 PRE-WARM COMPLETE: {cached} destinations cached in {total_elapsed/1000:.1f}s")
+        logger.info("")
+        logger.info("=" * 60)
+        logger.info(f"🔥  PRE-WARM COMPLETE")
+        logger.info(f"    {cached} destination(s) cached in {total_elapsed/1000:.1f}s")
+        logger.info("=" * 60)
+        logger.info("")
 
     # ------------------------------------------------------------------
     # Internal — content generation
@@ -168,9 +195,10 @@ class DestinationService:
                 destination.city, destination.country, language
             )
             highlights = [Highlight(**h) for h in highlights_data]
-            logger.info(f"  Highlights: {round((time.perf_counter()-start)*1000)}ms")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"       🏛️  Highlights generated in {elapsed}ms ({len(highlights)} items)")
         except Exception as e:
-            logger.error(f"Gemini highlights failed: {e}, using fallback")
+            logger.error(f"       🏛️  Highlights failed: {e} → using fallback")
             highlights = self._fallback_highlights(destination.city)
 
         try:
@@ -179,9 +207,10 @@ class DestinationService:
                 destination.city, destination.country, language
             )
             restaurants = [Restaurant(**r) for r in restaurants_data]
-            logger.info(f"  Restaurants: {round((time.perf_counter()-start)*1000)}ms")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"       🍝  Restaurants generated in {elapsed}ms ({len(restaurants)} items)")
         except Exception as e:
-            logger.error(f"Gemini restaurants failed: {e}, using fallback")
+            logger.error(f"       🍝  Restaurants failed: {e} → using fallback")
             restaurants = self._fallback_restaurants(destination.city)
 
         try:
@@ -197,9 +226,10 @@ class DestinationService:
                 destination="main_train_station",
                 options=transport_options
             )
-            logger.info(f"  Transport: {round((time.perf_counter()-start)*1000)}ms")
+            elapsed = round((time.perf_counter() - start) * 1000)
+            logger.info(f"       🚇  Transport generated in {elapsed}ms ({len(transport_options)} modes)")
         except Exception as e:
-            logger.error(f"Gemini transport failed: {e}, using fallback")
+            logger.error(f"       🚇  Transport failed: {e} → using fallback")
             airport_transport = self._fallback_transport()
 
         return DestinationContent(

@@ -6,8 +6,10 @@ Key design decisions for fast responses:
 - Compact output (40-80 words per long_description)
 - Generate directly in the target language (skip translation step!)
 - Low temperature for faster sampling
+- Inject real dates (weather) so Gemini never hallucinates past dates
 """
 
+from datetime import date, timedelta
 from app.prompts.base_prompts import BasePrompt, PromptConfig
 
 # Map language codes to names for prompts
@@ -90,7 +92,11 @@ class NewsPrompt(BasePrompt):
     @staticmethod
     def build(city: str, language: str = "en") -> str:
         lang = LANG_NAMES.get(language, "English")
-        return f"""Generate 5 positive local news headlines for {city}. Write in {lang}.
+        return f"""Generate 5 positive news headlines relevant to {city}. Write in {lang}.
+
+IMPORTANT ordering:
+- Item 1: general interest or worldwide relevance (culture, science, environment, technology)
+- Items 2-5: mix of local_interest, culture, events, sports
 
 Categories: sports, culture, events, local_interest. Positive/neutral tone only.
 Brief = 1 sentence. Long = 1-2 short paragraphs ({PromptConfig.LONG_DESCRIPTION_MIN_WORDS}-{PromptConfig.LONG_DESCRIPTION_MAX_WORDS} words).
@@ -99,9 +105,9 @@ Brief = 1 sentence. Long = 1-2 short paragraphs ({PromptConfig.LONG_DESCRIPTION_
 {BasePrompt.json_output_rules()}
 
 Return JSON array:
-[{{"title":"...","brief_description":"...","long_description":"...","category":"sports"}}, ... ]
+[{{"title":"...","brief_description":"...","long_description":"...","category":"culture"}}, ... ]
 
-Exactly 5 items. Mix categories."""
+Exactly 5 items. First item must NOT be sports."""
 
     @staticmethod
     def temperature() -> float:
@@ -114,17 +120,22 @@ class WeatherPrompt(BasePrompt):
     @staticmethod
     def build(city: str, language: str = "en") -> str:
         lang = LANG_NAMES.get(language, "English")
-        return f"""Generate a realistic 3-day weather forecast for {city} starting from today. Write in {lang}.
+        today = date.today()
+        d1 = today.isoformat()
+        d2 = (today + timedelta(days=1)).isoformat()
+        d3 = (today + timedelta(days=2)).isoformat()
+        return f"""Generate a realistic 3-day weather forecast for {city}. Write in {lang}.
 
+Today is {d1}. Use these exact dates: {d1}, {d2}, {d3}.
 Use typical weather patterns for this city and time of year. Be realistic with temperatures.
 Conditions should be one of: Sunny, Partly Cloudy, Cloudy, Clear, Rain, Light Rain, Overcast, Windy.
 
 {BasePrompt.json_output_rules()}
 
 Return JSON array:
-[{{"date":"YYYY-MM-DD","condition":"...","min_temperature_c":10.0,"max_temperature_c":18.0}}, ... ]
+[{{"date":"{d1}","condition":"...","min_temperature_c":10.0,"max_temperature_c":18.0}}, ... ]
 
-Exactly 3 days. Use today and next 2 days as dates."""
+Exactly 3 days. Use the 3 dates above."""
 
     @staticmethod
     def temperature() -> float:

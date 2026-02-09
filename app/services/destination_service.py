@@ -119,12 +119,13 @@ class DestinationService:
         """
         total = len(airports) * len(languages)
         logger.info("")
-        logger.info("=" * 60)
-        logger.info("🔥  PRE-WARMING CACHE")
-        logger.info(f"    {len(airports)} airport(s) × {len(languages)} language(s) = {total} combo(s)")
-        logger.info(f"    Airports:  {', '.join(airports)}")
-        logger.info(f"    Languages: {', '.join(languages)}")
-        logger.info("=" * 60)
+        logger.info("╔═════════════════════════════════════════════════════════╗")
+        logger.info("║  🔥  PRE-WARMING CACHE                                ║")
+        logger.info("╠═════════════════════════════════════════════════════════╣")
+        logger.info(f"║  {len(airports)} airport(s) × {len(languages)} language(s) = {total} combo(s){' ' * max(0, 37 - len(str(len(airports))) - len(str(len(languages))) - len(str(total)))}║")
+        logger.info(f"║  Airports:  {', '.join(airports)}{' ' * max(0, 43 - len(', '.join(airports)))}║")
+        logger.info(f"║  Languages: {', '.join(languages)}{' ' * max(0, 43 - len(', '.join(languages)))}║")
+        logger.info("╚═════════════════════════════════════════════════════════╝")
         overall_start = time.perf_counter()
 
         combo_idx = 0
@@ -134,45 +135,61 @@ class DestinationService:
                 tag = f"{airport_code}/{language}"
 
                 logger.info("")
-                logger.info(f"── [{combo_idx}/{total}] {tag} ──────────────────────────")
+                logger.info(f"┌─────────────────────────────────────────────────────")
+                logger.info(f"│  [{combo_idx}/{total}]  ✈️  {tag}")
+                logger.info(f"├─────────────────────────────────────────────────────")
 
-                # 🏛️ Highlights + 🍝 Restaurants + 🚇 Transport (bundled in content)
+                # ── Section 1: Destination Content ──
+                logger.info(f"│")
+                logger.info(f"│  📦  DESTINATION CONTENT")
+                logger.info(f"│  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
                 try:
                     start = time.perf_counter()
                     self.get_destination_content(airport_code, language)
                     elapsed = round((time.perf_counter() - start) * 1000)
-                    logger.info(f"  🏛️  Highlights   ✅  ready")
-                    logger.info(f"  🍝  Restaurants  ✅  ready")
-                    logger.info(f"  🚇  Transport    ✅  ready")
-                    logger.info(f"       ⏱  Content total: {elapsed}ms")
+                    logger.info(f"│      🏛️  Highlights   ✅  ready")
+                    logger.info(f"│      🍝  Restaurants  ✅  ready")
+                    logger.info(f"│      🚇  Transport    ✅  ready")
+                    logger.info(f"│      ⏱️  {elapsed}ms total")
                 except Exception as e:
-                    logger.error(f"  ❌  Content generation failed: {e}")
+                    logger.error(f"│      ❌  Content failed: {e}")
 
-                # 🌤️ Weather
+                # ── Section 2: Weather ──
+                logger.info(f"│")
+                logger.info(f"│  🌤️  WEATHER FORECAST")
+                logger.info(f"│  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
                 try:
                     start = time.perf_counter()
                     self.get_weather(airport_code, language)
                     elapsed = round((time.perf_counter() - start) * 1000)
-                    logger.info(f"  🌤️  Weather      ✅  ready ({elapsed}ms)")
+                    logger.info(f"│      🌡️  3-day forecast ✅  ready")
+                    logger.info(f"│      ⏱️  {elapsed}ms")
                 except Exception as e:
-                    logger.error(f"  🌤️  Weather      ❌  failed: {e}")
+                    logger.error(f"│      ❌  Weather failed: {e}")
 
-                # 📰 News
+                # ── Section 3: News ──
+                logger.info(f"│")
+                logger.info(f"│  📰  NEWS HEADLINES")
+                logger.info(f"│  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
                 try:
                     start = time.perf_counter()
                     self.get_news(airport_code, language)
                     elapsed = round((time.perf_counter() - start) * 1000)
-                    logger.info(f"  📰  News         ✅  ready ({elapsed}ms)")
+                    logger.info(f"│      📄  5 headlines   ✅  ready")
+                    logger.info(f"│      ⏱️  {elapsed}ms")
                 except Exception as e:
-                    logger.error(f"  📰  News         ❌  failed: {e}")
+                    logger.error(f"│      ❌  News failed: {e}")
+
+                logger.info(f"│")
+                logger.info(f"└─────────────────────────────────────────────────────")
 
         total_elapsed = round((time.perf_counter() - overall_start) * 1000)
         cached = len(self._content_cache)
         logger.info("")
-        logger.info("=" * 60)
-        logger.info(f"🔥  PRE-WARM COMPLETE")
-        logger.info(f"    {cached} destination(s) cached in {total_elapsed/1000:.1f}s")
-        logger.info("=" * 60)
+        logger.info("╔═════════════════════════════════════════════════════════╗")
+        logger.info("║  🔥  PRE-WARM COMPLETE                                ║")
+        logger.info(f"║  ✅  {cached} destination(s) cached in {total_elapsed/1000:.1f}s{' ' * max(0, 23 - len(str(cached)) - len(f'{total_elapsed/1000:.1f}'))}║")
+        logger.info("╚═════════════════════════════════════════════════════════╝")
         logger.info("")
 
     # ------------------------------------------------------------------
@@ -196,9 +213,9 @@ class DestinationService:
             )
             highlights = [Highlight(**h) for h in highlights_data]
             elapsed = round((time.perf_counter() - start) * 1000)
-            logger.info(f"       🏛️  Highlights generated in {elapsed}ms ({len(highlights)} items)")
+            logger.info(f"│          🏛️  Highlights  → {len(highlights)} items  ({elapsed}ms)")
         except Exception as e:
-            logger.error(f"       🏛️  Highlights failed: {e} → using fallback")
+            logger.error(f"│          🏛️  Highlights  → fallback  ({e})")
             highlights = self._fallback_highlights(destination.city)
 
         try:
@@ -208,9 +225,9 @@ class DestinationService:
             )
             restaurants = [Restaurant(**r) for r in restaurants_data]
             elapsed = round((time.perf_counter() - start) * 1000)
-            logger.info(f"       🍝  Restaurants generated in {elapsed}ms ({len(restaurants)} items)")
+            logger.info(f"│          🍝  Restaurants → {len(restaurants)} items  ({elapsed}ms)")
         except Exception as e:
-            logger.error(f"       🍝  Restaurants failed: {e} → using fallback")
+            logger.error(f"│          🍝  Restaurants → fallback  ({e})")
             restaurants = self._fallback_restaurants(destination.city)
 
         try:
@@ -227,9 +244,9 @@ class DestinationService:
                 options=transport_options
             )
             elapsed = round((time.perf_counter() - start) * 1000)
-            logger.info(f"       🚇  Transport generated in {elapsed}ms ({len(transport_options)} modes)")
+            logger.info(f"│          🚇  Transport  → {len(transport_options)} modes  ({elapsed}ms)")
         except Exception as e:
-            logger.error(f"       🚇  Transport failed: {e} → using fallback")
+            logger.error(f"│          🚇  Transport  → fallback  ({e})")
             airport_transport = self._fallback_transport()
 
         return DestinationContent(

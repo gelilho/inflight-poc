@@ -54,6 +54,19 @@ class CockpitCrew(BaseModel):
     first_officer: CrewMember
 
 
+class ConnectingFlight(BaseModel):
+    """Connecting flight available at the destination airport"""
+    flight_number: str            # "VY6102"
+    airline: str                  # "Vueling"
+    destination: str              # "Naples"
+    destination_code: str         # "NAP"
+    departure_time: str           # "18:45"
+    gate: str                     # "G12"
+    terminal: str                 # "T3"
+    same_terminal: bool           # True if same terminal as arrival
+    status: str                   # "On Time" / "Delayed" / "Boarding"
+
+
 class Flight(BaseModel):
     flight_number: str
     flight_date: str              # "20260207" (YYYYMMDD)
@@ -67,6 +80,18 @@ class Flight(BaseModel):
     average_duration_minutes: int
     departure_gate: str
     baggage_claim_belt: str
+    arrival_terminal: str = "T3"  # Terminal where this flight arrives
+    connecting_flights: List[ConnectingFlight] = Field(default_factory=list)
+
+
+# ============ FLIGHT ADVISORIES ============
+
+class FlightAdvisory(BaseModel):
+    """Safety and regulatory advisory for passengers"""
+    icon: str                     # Emoji icon for display
+    title: str
+    description: str
+    priority: Literal["high", "medium", "low"]
 
 
 # ============ DESTINATION CONTENT ============

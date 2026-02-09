@@ -3,7 +3,8 @@ from pathlib import Path
 from typing import Optional, List
 from app.models.schemas import (
     Passenger, Booking, Flight, Aircraft, CockpitCrew,
-    CrewMember, CabinCrewMember, EmergencyContacts, Destination
+    CrewMember, CabinCrewMember, EmergencyContacts, Destination,
+    ConnectingFlight
 )
 
 
@@ -103,6 +104,9 @@ class CSVDataLoader:
             return None
         
         row = row.iloc[0]
+        # Load connecting flights for this flight
+        connecting = self.get_connecting_flights(flight_number, flight_date)
+
         return Flight(
             flight_number=row["flight_number"],
             flight_date=str(row["flight_date"]),  # Force string
@@ -133,9 +137,35 @@ class CSVDataLoader:
             ],
             average_duration_minutes=int(row["avg_duration_min"]),
             departure_gate=row["departure_gate"],
-            baggage_claim_belt=row["baggage_belt"]
+            baggage_claim_belt=row["baggage_belt"],
+            arrival_terminal=row.get("arrival_terminal", "T1"),
+            connecting_flights=connecting
         )
     
+    def get_connecting_flights(self, flight_number: str, flight_date: str) -> List[ConnectingFlight]:
+        """Load connecting flights available at destination airport"""
+        csv_path = self.data_dir / "connecting_flights.csv"
+        if not csv_path.exists():
+            return []
+        df = pd.read_csv(csv_path, dtype={"parent_date": str})
+        flight_date = str(flight_date)
+        rows = df[(df["parent_flight"] == flight_number) & (df["parent_date"] == flight_date)]
+
+        connections = []
+        for _, row in rows.iterrows():
+            connections.append(ConnectingFlight(
+                flight_number=row["flight_number"],
+                airline=row["airline"],
+                destination=row["destination"],
+                destination_code=row["destination_code"],
+                departure_time=row["departure_time"],
+                gate=row["gate"],
+                terminal=row["terminal"],
+                same_terminal=str(row["same_terminal"]).lower() == "true",
+                status=row["status"]
+            ))
+        return connections
+
     def get_destination_info(self, airport_code: str) -> Optional[dict]:
         """Load destination basic info"""
         df = pd.read_csv(self.data_dir / "destinations.csv", dtype=str)

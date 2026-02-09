@@ -3,7 +3,7 @@
 from fastapi import APIRouter, HTTPException, Path
 from app.models.schemas import (
     Passenger, Booking, Flight, DestinationContent,
-    WeatherForecast, LocalNews, InflightExperience
+    WeatherForecast, LocalNews, InflightExperience, FlightAdvisory
 )
 from app.services.passenger_service import passenger_service
 from app.services.flight_service import flight_service
@@ -61,6 +61,7 @@ async def root():
             "passenger_bookings": "/api/v1/passenger/{user_id}/bookings",
             "booking": "/api/v1/booking/{booking_number}",
             "flight": "/api/v1/flight/{flight_number}/{date}",
+            "flight_advisories": "/api/v1/flight/advisories",
             "destination_content": "/api/v1/destination/{airport_code}/content/{language}",
             "weather": "/api/v1/destination/{airport_code}/weather/{language}",
             "news": "/api/v1/destination/{airport_code}/news/{language}",
@@ -70,6 +71,7 @@ async def root():
             "passenger": "/api/v1/passenger/P001",
             "booking": "/api/v1/booking/VY4K7M",
             "flight": "/api/v1/flight/VY71299/20260207",
+            "flight_advisories": "/api/v1/flight/advisories",
             "destination_rome_spanish": "/api/v1/destination/FCO/content/es",
             "weather_rome": "/api/v1/destination/FCO/weather/en",
             "news_rome": "/api/v1/destination/FCO/news/it",
@@ -176,6 +178,36 @@ async def get_booking(
 
 
 # ============================================================
+# FLIGHT ADVISORIES (must be BEFORE parameterized /flight/{x}/{y})
+# ============================================================
+
+@router.get(
+    "/api/v1/flight/advisories",
+    response_model=List[FlightAdvisory],
+    summary="Get flight safety advisories"
+)
+async def get_flight_advisories():
+    """
+    Get safety and regulatory advisories for passengers.
+
+    Returns advisories about airplane mode, mobile data, Bluetooth, seatbelt, etc.
+
+    **Shown on the home screen so passengers see them immediately.**
+    """
+    start = time.perf_counter()
+    path = "/api/v1/flight/advisories"
+    _log_request("GET", path)
+    try:
+        result = flight_service.get_flight_advisories()
+        _log_response("GET", path, 200, round((time.perf_counter() - start) * 1000), f"{len(result)} advisories")
+        return result
+    except Exception as e:
+        _log_response("GET", path, 500, round((time.perf_counter() - start) * 1000), str(e))
+        logger.error(f"Error fetching advisories: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+# ============================================================
 # FLIGHT ENDPOINT
 # ============================================================
 
@@ -190,15 +222,16 @@ async def get_flight(
 ):
     """
     Get flight operational details for a specific date.
-    
+
     **Date format: YYYYMMDD (e.g., 20260207)**
-    
+
     **Date-specific because crew, aircraft, and gates change daily.**
-    
+
     Returns:
     - Aircraft details (model, registration, name, age)
     - Cockpit crew (captain, first officer)
     - Cabin crew (3 members)
+    - Connecting flights at destination
     - Gates, times, duration
     """
     start = time.perf_counter()

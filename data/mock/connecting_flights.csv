@@ -1,0 +1,12 @@
+parent_flight,parent_date,flight_number,airline,destination,destination_code,departure_time,gate,terminal,same_terminal,status
+VY71299,20260207,VY6102,Vueling,Naples,NAP,18:45,G12,T3,True,On Time
+VY71299,20260207,AZ1234,ITA Airways,Milan Malpensa,MXP,19:10,G28,T3,True,On Time
+VY71299,20260207,FR9876,Ryanair,Palermo,PMO,19:30,E5,T2,False,On Time
+VY71299,20260207,VY6208,Vueling,Florence,FLR,20:15,G15,T3,True,Boarding
+VY71299,20260208,VY6102,Vueling,Naples,NAP,18:45,G14,T3,True,On Time
+VY71299,20260208,AZ1234,ITA Airways,Milan Malpensa,MXP,19:10,G30,T3,True,Delayed
+VY71299,20260208,FR9876,Ryanair,Palermo,PMO,19:30,E8,T2,False,On Time
+VY71299,20260208,VY6208,Vueling,Florence,FLR,20:15,G16,T3,True,On Time
+IB3421,20260208,BA456,British Airways,Edinburgh,EDI,12:30,A15,T5,False,On Time
+IB3421,20260208,VY8830,Vueling,Manchester,MAN,13:00,B22,T2,False,On Time
+IB3421,20260208,EZY201,easyJet,Dublin,DUB,13:45,S12,T2,False,On Time

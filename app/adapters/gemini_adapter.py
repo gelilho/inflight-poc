@@ -16,6 +16,7 @@ from app.prompts.destination_prompts import (
 from app.prompts.translation_prompts import TranslationPrompt
 from app.prompts.base_prompts import PromptConfig
 import json
+import re
 import logging
 import time
 
@@ -122,7 +123,14 @@ class GeminiAdapter:
             raise
 
     def _parse_json_response(self, text: str) -> Any:
-        """Parse JSON response, handling markdown code blocks"""
+        """Parse JSON response, handling markdown code blocks and common Gemini quirks.
+
+        Gemini sometimes returns:
+        - Markdown code blocks (```json ... ```)
+        - Trailing commas after the last element
+        - Comments inside JSON
+        This method cleans up those issues before parsing.
+        """
         # Remove markdown code blocks if present
         if text.startswith("```"):
             lines = text.split("\n")
@@ -133,12 +141,33 @@ class GeminiAdapter:
 
         text = text.strip().strip("`").strip()
 
+        # First attempt: strict parse
         try:
             return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+
+        # Second attempt: fix common Gemini quirks
+        cleaned = self._clean_json(text)
+        try:
+            return json.loads(cleaned)
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse JSON response: {e}")
             logger.error(f"Response text: {text[:500]}")
             raise ValueError(f"Invalid JSON response from Gemini: {e}")
+
+    @staticmethod
+    def _clean_json(text: str) -> str:
+        """Fix common JSON issues from Gemini output.
+
+        - Remove trailing commas before } or ]
+        - Remove single-line // comments
+        """
+        # Remove single-line comments (// ...)
+        text = re.sub(r'//.*?$', '', text, flags=re.MULTILINE)
+        # Remove trailing commas: ,  } or ,  ]
+        text = re.sub(r',\s*([\]}])', r'\1', text)
+        return text
 
 
 # Singleton instance

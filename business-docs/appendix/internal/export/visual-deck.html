@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vueling Inflight Experience — Visual Deck</title>
+<style>
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #1a1a2e;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === SLIDE === */
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    padding: 28mm 32mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .slide:last-child {
+    page-break-after: avoid;
+  }
+
+  /* === BACKGROUNDS === */
+  .bg-dark {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+
+  .bg-yellow {
+    background: linear-gradient(135deg, #FFF000 0%, #FFD700 100%);
+    color: #1a1a2e;
+  }
+
+  .bg-deep {
+    background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+  }
+
+  .bg-warm {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%);
+  }
+
+  /* === VUELING ACCENT BAR === */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5mm;
+    background: #FFF000;
+  }
+
+  .bg-yellow::before {
+    background: #1a1a2e;
+  }
+
+  /* === FOOTER === */
+  .slide::after {
+    content: 'Vueling Inflight Experience — MWC Barcelona 2026';
+    position: absolute;
+    bottom: 8mm;
+    left: 32mm;
+    font-size: 8pt;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.5px;
+  }
+
+  .bg-yellow::after {
+    color: rgba(26,26,46,0.35);
+  }
+
+  /* === TYPOGRAPHY === */
+  h1 {
+    font-size: 32pt;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6mm;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 20pt;
+    font-weight: 700;
+    margin-bottom: 5mm;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 14pt;
+    font-weight: 600;
+    margin-bottom: 3mm;
+    line-height: 1.3;
+  }
+
+  p, li {
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  .subtitle {
+    font-size: 14pt;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-bottom: 8mm;
+    line-height: 1.4;
+  }
+
+  .label {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #FFF000;
+    margin-bottom: 3mm;
+  }
+
+  .bg-yellow .label {
+    color: #1a1a2e;
+    opacity: 0.6;
+  }
+
+  .accent {
+    color: #FFF000;
+  }
+
+  .bg-yellow .accent {
+    color: #1a1a2e;
+  }
+
+  .big-number {
+    font-size: 52pt;
+    font-weight: 900;
+    color: #FFF000;
+    line-height: 1;
+  }
+
+  .bg-yellow .big-number {
+    color: #1a1a2e;
+  }
+
+  /* === LAYOUT === */
+  .row {
+    display: flex;
+    gap: 8mm;
+    align-items: flex-start;
+  }
+
+  .col {
+    flex: 1;
+  }
+
+  .col-2 { flex: 2; }
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  /* === CARDS === */
+  .card {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4mm;
+    padding: 5mm 6mm;
+    margin-bottom: 3mm;
+  }
+
+  .card-yellow {
+    background: rgba(255, 240, 0, 0.1);
+    border: 1px solid rgba(255, 240, 0, 0.3);
+    border-radius: 4mm;
+    padding: 5mm 6mm;
+    margin-bottom: 3mm;
+  }
+
+  .bg-yellow .card {
+    background: rgba(26, 26, 46, 0.07);
+    border: 1px solid rgba(26, 26, 46, 0.15);
+  }
+
+  /* === TABLES === */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 700;
+    padding: 2.5mm 3mm;
+    border-bottom: 1.5px solid rgba(255,240,0,0.4);
+    color: #FFF000;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  td {
+    padding: 2.5mm 3mm;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    vertical-align: top;
+  }
+
+  .bg-yellow th {
+    color: #1a1a2e;
+    border-bottom-color: rgba(26,26,46,0.3);
+  }
+
+  .bg-yellow td {
+    border-bottom-color: rgba(26,26,46,0.1);
+  }
+
+  /* === PROGRESS BARS === */
+  .bar-container {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-bottom: 2mm;
+  }
+
+  .bar-label {
+    font-size: 9pt;
+    font-weight: 600;
+    width: 36mm;
+    text-align: right;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 5mm;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2.5mm;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFF000, #FFD700);
+    border-radius: 2.5mm;
+  }
+
+  .bar-value {
+    font-size: 10pt;
+    font-weight: 800;
+    color: #FFF000;
+    width: 18mm;
+  }
+
+  /* === TIMELINE === */
+  .timeline {
+    position: relative;
+    padding-left: 15mm;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 4mm;
+    top: 2mm;
+    bottom: 2mm;
+    width: 1.5px;
+    background: rgba(255,240,0,0.3);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 4mm;
+    padding-left: 2mm;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -12.5mm;
+    top: 2mm;
+    width: 3mm;
+    height: 3mm;
+    background: #FFF000;
+    border-radius: 50%;
+  }
+
+  .timeline-time {
+    font-size: 9pt;
+    font-weight: 800;
+    color: #FFF000;
+    margin-bottom: 1mm;
+  }
+
+  .timeline-desc {
+    font-size: 10pt;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+
+  /* === FLOW ARROWS === */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4mm;
+  }
+
+  .flow-step {
+    text-align: center;
+    flex: 1;
+  }
+
+  .flow-box {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,240,0,0.3);
+    border-radius: 3mm;
+    padding: 4mm 3mm;
+    margin-bottom: 2mm;
+    font-size: 10pt;
+    font-weight: 600;
+  }
+
+  .flow-arrow {
+    font-size: 20pt;
+    color: #FFF000;
+    font-weight: 300;
+  }
+
+  /* === PILL TAGS === */
+  .pill {
+    display: inline-block;
+    background: rgba(255,240,0,0.15);
+    border: 1px solid rgba(255,240,0,0.3);
+    color: #FFF000;
+    padding: 1mm 3mm;
+    border-radius: 2mm;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 2mm;
+    margin-bottom: 1.5mm;
+  }
+
+  /* === GRID === */
+  .grid-3 {
+    display: flex;
+    gap: 5mm;
+  }
+
+  .grid-3 > div {
+    flex: 1;
+  }
+
+  .grid-2 {
+    display: flex;
+    gap: 6mm;
+  }
+
+  .grid-2 > div {
+    flex: 1;
+  }
+
+  /* === QUOTE === */
+  .quote {
+    font-size: 16pt;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+    padding: 5mm 0;
+    border-left: 3px solid #FFF000;
+    padding-left: 6mm;
+    opacity: 0.9;
+  }
+
+  /* === LISTS === */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul li {
+    padding-left: 5mm;
+    position: relative;
+    margin-bottom: 1.5mm;
+  }
+
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2.2mm;
+    width: 2mm;
+    height: 2mm;
+    background: #FFF000;
+    border-radius: 50%;
+  }
+
+  .bg-yellow ul li::before {
+    background: #1a1a2e;
+  }
+
+  /* === ARCHITECTURE DIAGRAM === */
+  .arch-box {
+    border: 1.5px solid rgba(255,240,0,0.4);
+    border-radius: 3mm;
+    padding: 4mm 5mm;
+    text-align: center;
+    font-size: 9pt;
+    font-weight: 600;
+    margin-bottom: 2mm;
+  }
+
+  .arch-box-filled {
+    background: rgba(255,240,0,0.1);
+    border: 1.5px solid rgba(255,240,0,0.5);
+    border-radius: 3mm;
+    padding: 4mm 5mm;
+    text-align: center;
+    font-size: 9pt;
+    font-weight: 600;
+    margin-bottom: 2mm;
+  }
+
+  .arch-arrow {
+    text-align: center;
+    font-size: 14pt;
+    color: rgba(255,240,0,0.5);
+    margin: 1mm 0;
+  }
+
+  /* === PHASE BOXES === */
+  .phase-box {
+    border: 1.5px solid rgba(255,240,0,0.3);
+    border-radius: 3mm;
+    padding: 4mm 5mm;
+    position: relative;
+    height: 100%;
+  }
+
+  .phase-box.done {
+    border-color: #FFF000;
+    background: rgba(255,240,0,0.08);
+  }
+
+  .phase-tag {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #FFF000;
+    margin-bottom: 2mm;
+  }
+
+  .phase-items {
+    font-size: 9pt;
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+
+  .phase-date {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #FFF000;
+    margin-top: 2mm;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- SLIDE 1 — COVER                              -->
+<!-- ============================================ -->
+<div class="slide bg-dark" style="justify-content: center; align-items: center; text-align: center;">
+  <div>
+    <div style="font-size: 11pt; font-weight: 800; letter-spacing: 6px; color: #FFF000; margin-bottom: 12mm; text-transform: uppercase;">VUELING</div>
+    <h1 style="font-size: 40pt; margin-bottom: 8mm;">Inflight Experience</h1>
+    <p class="subtitle" style="font-size: 15pt; max-width: 180mm; margin: 0 auto 14mm;">The first AI-powered, end-to-end digital journey<br>for low-cost aviation</p>
+    <div style="display: flex; justify-content: center; gap: 6mm; margin-bottom: 14mm;">
+      <span class="pill">Content</span>
+      <span class="pill">Entertainment</span>
+      <span class="pill">Food Ordering</span>
+      <span class="pill">Personalization</span>
+    </div>
+    <p style="font-size: 11pt; opacity: 0.5;">All from one booking number. From every single passenger.</p>
+    <div style="margin-top: 16mm; font-size: 10pt; opacity: 0.35;">MWC Barcelona 2026</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 2 — THE GAP                            -->
+<!-- ============================================ -->
+<div class="slide bg-dark">
+  <div class="label">The Problem</div>
+  <h1>34 million passengers.<br><span class="accent">Zero engagement.</span></h1>
+  <p class="subtitle">60 million hours per year in our aircraft — wasted.</p>
+
+  <div class="row" style="margin-top: 4mm;">
+    <div class="col">
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">No personalized content</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">Passengers bring their own entertainment</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">Cart-based food service</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">Low conversion, low convenience, food waste</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">Paper magazine nobody reads</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">Costs money and trees — zero engagement data</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">Destination info? Google it</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">Passengers discover on someone else's platform</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">Help? Call a hotline</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">Or wait for crew — no self-service</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 2.5mm;">
+        <h3 style="font-size: 10pt; margin-bottom: 1mm;">Zero passenger data</h3>
+        <p style="font-size: 9pt; opacity: 0.7;">No data on what passengers want, read, eat, prefer</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-yellow" style="margin-top: 4mm; text-align: center;">
+    <p style="font-size: 12pt; font-weight: 700;">We have the attention. We have the context. We have the distribution.<br><span class="accent">We just aren't using any of it.</span></p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 3 — THE VISION                         -->
+<!-- ============================================ -->
+<div class="slide bg-yellow">
+  <div class="label">The Vision</div>
+  <h1 style="font-size: 34pt;">What if every short-haul flight<br>felt like a long-haul experience?</h1>
+
+  <div style="margin-top: 6mm;">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-box" style="border-color: rgba(26,26,46,0.3); background: rgba(26,26,46,0.06);">
+          <div style="font-size: 22pt; margin-bottom: 1mm;">😴</div>
+          <div style="font-weight: 800;">BEFORE</div>
+          <div style="font-size: 9pt; font-weight: 400; margin-top: 1mm;">Dead time<br>Zero data<br>Bored passenger</div>
+        </div>
+      </div>
+      <div class="flow-arrow" style="color: #1a1a2e;">&#10140;</div>
+      <div class="flow-step">
+        <div class="flow-box" style="border-color: #1a1a2e; border-width: 2.5px; background: rgba(26,26,46,0.1);">
+          <div style="font-size: 22pt; margin-bottom: 1mm;">✈</div>
+          <div style="font-weight: 800;">VUELING<br>INFLIGHT</div>
+          <div style="font-size: 9pt; font-weight: 400; margin-top: 1mm;">Content + Commerce<br>+ Personalization<br>Platform</div>
+        </div>
+      </div>
+      <div class="flow-arrow" style="color: #1a1a2e;">&#10140;</div>
+      <div class="flow-step">
+        <div class="flow-box" style="border-color: rgba(26,26,46,0.3); background: rgba(26,26,46,0.06);">
+          <div style="font-size: 22pt; margin-bottom: 1mm;">🎉</div>
+          <div style="font-weight: 800;">AFTER</div>
+          <div style="font-size: 9pt; font-weight: 400; margin-top: 1mm;">Engaged passenger<br>Revenue + Insights<br>Loyal customer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote" style="margin-top: 8mm; border-left-color: #1a1a2e; font-size: 14pt;">
+    Transform every flight into the best few hours of a passenger's day.
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 4 — 11 PILLARS                         -->
+<!-- ============================================ -->
+<div class="slide bg-dark">
+  <div class="label">The Solution</div>
+  <h2>11 Experience Pillars</h2>
+
+  <div class="row" style="margin-top: 2mm;">
+    <div class="col">
+      <div style="margin-bottom: 4mm;">
+        <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px;">COMMERCE</h3>
+        <div class="card" style="padding: 3mm 4mm;">
+          <p style="font-size: 10pt;"><strong>Food & Snacks</strong><br><span style="font-size: 9pt; opacity: 0.7;">Pre-order, order onboard, delivered to seat</span></p>
+        </div>
+      </div>
+      <div style="margin-bottom: 4mm;">
+        <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px;">ENTERTAINMENT</h3>
+        <div class="card" style="padding: 3mm 4mm;">
+          <p style="font-size: 10pt;"><strong>Music & Audio</strong><br><span style="font-size: 9pt; opacity: 0.7;">AI-curated playlists per destination</span></p>
+        </div>
+      </div>
+      <div>
+        <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px;">PERSONALIZATION</h3>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Your Aircraft</strong> <span style="font-size: 9pt; opacity: 0.7;">— "Air Force Juan"</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm;">
+          <p style="font-size: 10pt;"><strong>Your Crew</strong> <span style="font-size: 9pt; opacity: 0.7;">— Names & welcome</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div style="margin-bottom: 4mm;">
+        <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px;">CONTENT</h3>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Discover Destination</strong><br><span style="font-size: 9pt; opacity: 0.7;">Top highlights + restaurants — AI-generated</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Weather & News</strong><br><span style="font-size: 9pt; opacity: 0.7;">3-day forecast + curated local news</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm;">
+          <p style="font-size: 10pt;"><strong>Digital Magazine</strong><br><span style="font-size: 9pt; opacity: 0.7;">The new Ling — travel stories, tips</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div>
+        <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px;">UTILITY</h3>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Live Flight Tracker</strong><br><span style="font-size: 9pt; opacity: 0.7;">Real-time map, altitude, ETA</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Getting to the City</strong><br><span style="font-size: 9pt; opacity: 0.7;">Transport + bookable transfers</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm; margin-bottom: 1.5mm;">
+          <p style="font-size: 10pt;"><strong>Peace of Mind</strong><br><span style="font-size: 9pt; opacity: 0.7;">Emergency contacts + helpline</span></p>
+        </div>
+        <div class="card" style="padding: 3mm 4mm;">
+          <p style="font-size: 10pt;"><strong>FAQ & Help</strong><br><span style="font-size: 9pt; opacity: 0.7;">Searchable — answers without calling</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 4mm;">
+    <span class="pill">One App</span>
+    <span class="pill">One Booking</span>
+    <span class="pill">One Experience</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 5 — FOOD REVENUE ENGINE                -->
+<!-- ============================================ -->
+<div class="slide bg-deep">
+  <div class="label">The Revenue Engine</div>
+  <h2>Three Moments to Capture a Sale</h2>
+  <p class="subtitle" style="font-size: 11pt; margin-bottom: 5mm;">The pillar that pays for the entire platform</p>
+
+  <div class="grid-3" style="margin-bottom: 5mm;">
+    <div>
+      <div class="arch-box-filled">
+        <div style="font-size: 9pt; opacity: 0.6; margin-bottom: 1mm;">T-24h</div>
+        <div style="font-size: 12pt; font-weight: 800;">DAY BEFORE</div>
+      </div>
+      <div class="card" style="padding: 3mm 4mm;">
+        <p style="font-size: 9pt;">Push notification:<br><em>"Pre-order your onboard menu"</em></p>
+        <div style="margin-top: 2mm;">
+          <span class="pill" style="font-size: 7pt;">Guaranteed Revenue</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="arch-box-filled">
+        <div style="font-size: 9pt; opacity: 0.6; margin-bottom: 1mm;">T-3h</div>
+        <div style="font-size: 12pt; font-weight: 800;">AT THE AIRPORT</div>
+      </div>
+      <div class="card" style="padding: 3mm 4mm;">
+        <p style="font-size: 9pt;">After security push:<br><em>"Add a snack bag?"</em></p>
+        <div style="margin-top: 2mm;">
+          <span class="pill" style="font-size: 7pt;">Upsell Revenue</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="arch-box-filled">
+        <div style="font-size: 9pt; opacity: 0.6; margin-bottom: 1mm;">T+15min</div>
+        <div style="font-size: 12pt; font-weight: 800;">ONBOARD</div>
+      </div>
+      <div class="card" style="padding: 3mm 4mm;">
+        <p style="font-size: 9pt;">Digital menu:<br><em>Browse &#8594; Tap &#8594; Order &#8594; Pay</em></p>
+        <div style="margin-top: 2mm;">
+          <span class="pill" style="font-size: 7pt;">Live Order</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-yellow" style="padding: 5mm 6mm;">
+    <div class="grid-2" style="gap: 10mm;">
+      <div>
+        <div class="bar-container">
+          <div class="bar-label">AOV uplift</div>
+          <div class="bar-track"><div class="bar-fill" style="width: 60%;"></div></div>
+          <div class="bar-value">+30%</div>
+        </div>
+        <div class="bar-container">
+          <div class="bar-label">Food waste</div>
+          <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
+          <div class="bar-value">-20%</div>
+        </div>
+      </div>
+      <div>
+        <div class="bar-container">
+          <div class="bar-label">Crew time</div>
+          <div class="bar-track"><div class="bar-fill" style="width: 30%;"></div></div>
+          <div class="bar-value">-15%</div>
+        </div>
+        <div class="bar-container">
+          <div class="bar-label">F&B revenue</div>
+          <div class="bar-track"><div class="bar-fill" style="width: 85%;"></div></div>
+          <div class="bar-value">~27M EUR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 6 — PASSENGER JOURNEY                  -->
+<!-- ============================================ -->
+<div class="slide bg-dark">
+  <div class="label">Passenger Journey</div>
+  <h2>The Experience Starts 24 Hours Before Boarding</h2>
+
+  <div class="row" style="margin-top: 3mm;">
+    <div class="col">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">T-24h &middot; BEFORE THE FLIGHT</div>
+          <div class="timeline-desc">Silent push: content pre-cached on device (~15-25 MB)<br>Push: "Flying to Rome tomorrow? Pre-order your menu"</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">T-3h &middot; AT THE AIRPORT</div>
+          <div class="timeline-desc">After check-in: "Explore Rome while you wait"<br>After security: "Want a picnic bag for the flight?"</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">T-0 &middot; BOARDING</div>
+          <div class="timeline-desc">App detects WiFi &#8594; loads cached experience instantly<br>WiFi portal: enter PNR &#8594; content from onboard edge cache</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">T+15min &middot; CRUISING</div>
+          <div class="timeline-desc">Browse content offline: highlights, restaurants, magazine<br>Food ordering live: digital menu &#8594; cart &#8594; pay &#8594; delivered</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">T-30min &middot; APPROACHING</div>
+          <div class="timeline-desc">"30 minutes to Rome!" &#8594; Weather, transport, baggage<br>Emergency contacts surfaced</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">LANDING &middot; POST-FLIGHT</div>
+          <div class="timeline-desc">"Welcome to Rome! Rate your experience?"<br>NPS survey + destination guide stays accessible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 7 — ARCHITECTURE                       -->
+<!-- ============================================ -->
+<div class="slide bg-warm">
+  <div class="label">Technical Architecture</div>
+  <h2>Offline-First &middot; Pre-Computed &middot; Minimal Satellite</h2>
+
+  <div style="margin-top: 3mm;">
+    <div class="arch-box-filled" style="padding: 4mm 5mm;">
+      <strong>Content Generation Layer</strong> (Scheduled Cadences)<br>
+      <span style="font-size: 9pt; opacity: 0.7;">Destinations (2wk) &middot; Flights (daily) &middot; News (6h) &middot; Weather (12h) &middot; Music (weekly) &middot; Magazine (weekly) &middot; FAQ (on change)</span>
+    </div>
+    <div class="arch-arrow">&#9660;</div>
+    <div class="arch-box-filled" style="padding: 4mm 5mm;">
+      <strong>Content Store (CDN / Cache)</strong><br>
+      <span style="font-size: 9pt; opacity: 0.7;">Single AI Engine: Google Gemini 2.5 Flash — highlights, restaurants, weather, news, transport, translations (6 languages)</span>
+    </div>
+    <div style="display: flex; gap: 8mm; margin-top: 2mm;">
+      <div style="flex: 1;">
+        <div class="arch-arrow">&#9660;</div>
+        <div class="arch-box" style="border-color: rgba(255,240,0,0.5);">
+          <strong>Silent Push</strong><br>
+          <span style="font-size: 8pt; opacity: 0.7;">App users &middot; T-24h &middot; ~15-25 MB</span>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <div class="arch-arrow">&#9660;</div>
+        <div class="arch-box" style="border-color: rgba(255,240,0,0.5);">
+          <strong>Onboard Edge Cache</strong><br>
+          <span style="font-size: 8pt; opacity: 0.7;">WiFi portal &middot; Loaded at gate via ground WiFi</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-arrow">&#9660;</div>
+    <div class="arch-box-filled" style="padding: 4mm 5mm;">
+      <strong>Passenger Device</strong> — App or Browser<br>
+      <span style="font-size: 9pt; opacity: 0.7;">Content loads instantly &middot; Zero satellite bandwidth</span>
+    </div>
+    <div class="arch-arrow">&#9660;</div>
+    <div class="arch-box" style="border-color: rgba(255,240,0,0.3); padding: 4mm 5mm;">
+      <strong>Satellite</strong> (Real-time only) &middot; <span class="accent" style="font-weight: 800;">~370 KB per flight</span><br>
+      <span style="font-size: 9pt; opacity: 0.7;">Flight tracker (~1 KB/30s) &middot; Food orders (~2 KB/order) &middot; Payments (~1 KB/txn)</span>
+    </div>
+  </div>
+
+  <p style="text-align: center; margin-top: 4mm; font-size: 10pt; opacity: 0.6;">Total satellite budget per flight: less than a single webpage</p>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 8 — KPIs                               -->
+<!-- ============================================ -->
+<div class="slide bg-dark">
+  <div class="label">Key Metrics</div>
+  <h2>The Numbers That Matter</h2>
+
+  <div class="grid-2" style="margin-top: 4mm;">
+    <div>
+      <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px; margin-bottom: 3mm;">ENGAGEMENT</h3>
+      <div class="bar-container">
+        <div class="bar-label">Activation</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 50%;"></div></div>
+        <div class="bar-value">>25%</div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">Session</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 65%;"></div></div>
+        <div class="bar-value">>12 min</div>
+      </div>
+
+      <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px; margin-top: 5mm; margin-bottom: 3mm;">REVENUE</h3>
+      <div class="bar-container">
+        <div class="bar-label">Food conv.</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 45%;"></div></div>
+        <div class="bar-value">>8%</div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">AOV uplift</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 60%;"></div></div>
+        <div class="bar-value">+30%</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px; margin-bottom: 3mm;">SATISFACTION</h3>
+      <div class="bar-container">
+        <div class="bar-label">NPS lift</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
+        <div class="bar-value">+5 pts</div>
+      </div>
+
+      <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px; margin-top: 5mm; margin-bottom: 3mm;">OPERATIONS</h3>
+      <div class="bar-container">
+        <div class="bar-label">Crew time</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 30%;"></div></div>
+        <div class="bar-value">-15%</div>
+      </div>
+
+      <h3 class="accent" style="font-size: 10pt; letter-spacing: 1px; margin-top: 5mm; margin-bottom: 3mm;">SUSTAINABILITY</h3>
+      <div class="bar-container">
+        <div class="bar-label">Food waste</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
+        <div class="bar-value">-20%</div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">Forecast</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 85%;"></div></div>
+        <div class="bar-value">>85%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-yellow" style="text-align: center; margin-top: 5mm; padding: 4mm;">
+    <p style="font-size: 12pt; font-weight: 700;">Cost per passenger: <span class="accent">~0.005 EUR</span> &nbsp;&middot;&nbsp; ROI: <span class="accent">160x — 240x</span></p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 9 — HYPERPERSONALIZATION               -->
+<!-- ============================================ -->
+<div class="slide bg-deep">
+  <div class="label">The Future</div>
+  <h2>Hyperpersonalization &mdash; The Data Flywheel</h2>
+  <p class="subtitle" style="font-size: 11pt;">Every interaction creates a preference signal. Over time, the platform learns.</p>
+
+  <div class="row" style="margin-top: 2mm;">
+    <div class="col">
+      <div style="text-align: center;">
+        <div class="arch-box-filled" style="margin-bottom: 2mm;">
+          <strong>Passenger Interacts</strong>
+        </div>
+        <div class="arch-arrow">&#9660;</div>
+        <div class="arch-box-filled" style="margin-bottom: 2mm;">
+          <strong>Preference Signals</strong><br>
+          <span style="font-size: 8pt; opacity: 0.7;">reads &middot; orders &middot; plays &middot; searches &middot; clicks &middot; skips</span>
+        </div>
+        <div class="arch-arrow">&#9660;</div>
+        <div class="arch-box-filled" style="margin-bottom: 2mm;">
+          <strong>Personalization Engine</strong><br>
+          <span style="font-size: 8pt; opacity: 0.7;">profiles &middot; segments &middot; predictions &middot; offers</span>
+        </div>
+        <div class="arch-arrow">&#9660;</div>
+        <div class="arch-box-filled">
+          <strong>Tailored Experience</strong><br>
+          <span style="font-size: 8pt; opacity: 0.7;">&#8634; feeds back into interaction</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card" style="padding: 3.5mm 4mm; margin-bottom: 2mm;">
+        <p style="font-size: 9.5pt;"><span class="accent" style="font-weight: 700;">Maria</span> always orders Mediterranean &#8594; <em>"Your usual?"</em></p>
+      </div>
+      <div class="card" style="padding: 3.5mm 4mm; margin-bottom: 2mm;">
+        <p style="font-size: 9.5pt;"><span class="accent" style="font-weight: 700;">Carlos</span> reads culture articles &#8594; <em>Magazine opens culture-first</em></p>
+      </div>
+      <div class="card" style="padding: 3.5mm 4mm; margin-bottom: 2mm;">
+        <p style="font-size: 9.5pt;"><span class="accent" style="font-weight: 700;">Family</span> flying to Mallorca &#8594; <em>Kids' menu + family content</em></p>
+      </div>
+      <div class="card" style="padding: 3.5mm 4mm; margin-bottom: 2mm;">
+        <p style="font-size: 9.5pt;"><span class="accent" style="font-weight: 700;">10th order</span> from frequent flyer &#8594; <em>"This one's on us!"</em></p>
+      </div>
+      <div class="card" style="padding: 3.5mm 4mm;">
+        <p style="font-size: 9.5pt;"><span class="accent" style="font-weight: 700;">Monday BCN&#8594;MAD</span> business &#8594; <em>Coffee + news-first layout</em></p>
+      </div>
+
+      <p style="margin-top: 3mm; font-size: 10pt; font-weight: 700; text-align: center;">Treat every passenger like a VIP &mdash;<br>through software, not hardware.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 10 — BUSINESS IMPACT                   -->
+<!-- ============================================ -->
+<div class="slide bg-yellow">
+  <div class="label">Business Impact</div>
+  <h1 style="font-size: 30pt;">Why This Changes Everything</h1>
+
+  <div class="grid-3" style="margin-top: 5mm; gap: 4mm;">
+    <div class="card" style="padding: 5mm;">
+      <h3 style="font-size: 11pt; margin-bottom: 2mm;">Revenue</h3>
+      <div class="big-number" style="font-size: 32pt;">~27M</div>
+      <p style="font-size: 9pt; margin-top: 1mm;">EUR/year from food pre-orders alone. Every content card is a future commerce touchpoint.</p>
+    </div>
+    <div class="card" style="padding: 5mm;">
+      <h3 style="font-size: 11pt; margin-bottom: 2mm;">Brand</h3>
+      <p style="font-size: 10pt; font-weight: 700; margin-top: 2mm;">Long-haul level experience on short-haul flights.</p>
+      <p style="font-size: 9pt; margin-top: 2mm;">The kind of journey passengers expect on transatlantic flights &mdash; now on every Vueling route.</p>
+    </div>
+    <div class="card" style="padding: 5mm;">
+      <h3 style="font-size: 11pt; margin-bottom: 2mm;">Cost</h3>
+      <div class="big-number" style="font-size: 32pt;">0.005</div>
+      <p style="font-size: 9pt; margin-top: 1mm;">EUR per passenger. Eliminates paper magazine. Reduces food waste. Crew efficiency gains.</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top: 4mm; gap: 4mm;">
+    <div class="card" style="padding: 5mm;">
+      <h3 style="font-size: 11pt; margin-bottom: 2mm;">Data</h3>
+      <p style="font-size: 10pt;">Every tap, every read, every order builds a passenger profile. The richest passenger intelligence layer in LCC aviation.</p>
+    </div>
+    <div class="card" style="padding: 5mm;">
+      <h3 style="font-size: 11pt; margin-bottom: 2mm;">Operations</h3>
+      <p style="font-size: 10pt;">-15% crew aisle time. Predictive catering from pre-order data. Smarter stock, less waste, better margins.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 11 — ROADMAP                           -->
+<!-- ============================================ -->
+<div class="slide bg-dark">
+  <div class="label">Roadmap</div>
+  <h2>From POC to Platform</h2>
+
+  <div style="display: flex; gap: 4mm; margin-top: 5mm; align-items: stretch;">
+    <div style="flex: 1;">
+      <div class="phase-box done">
+        <div class="phase-tag">POC &#10003;</div>
+        <div class="phase-items">
+          Destination content<br>
+          Flight details<br>
+          3 cities, 6 languages<br>
+          Working UI + API
+        </div>
+        <div class="phase-date">Feb 2026</div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div class="phase-box">
+        <div class="phase-tag">Phase 1</div>
+        <div class="phase-items">
+          Food pre-order<br>
+          Flight tracker<br>
+          Digital magazine<br>
+          FAQ<br>
+          Offline caching
+        </div>
+        <div class="phase-date">TBD 2026</div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div class="phase-box">
+        <div class="phase-tag">Phase 2</div>
+        <div class="phase-items">
+          Music & Audio<br>
+          Onboard ordering<br>
+          + Payments<br>
+          Full route network
+        </div>
+        <div class="phase-date">TBD 2026</div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div class="phase-box">
+        <div class="phase-tag">Phase 3</div>
+        <div class="phase-items">
+          Hyperpersonalization<br>
+          Preferences<br>
+          Loyalty<br>
+          VIP for all
+        </div>
+        <div class="phase-date">End 2026</div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div class="phase-box">
+        <div class="phase-tag">Phase 4</div>
+        <div class="phase-items">
+          Commerce<br>
+          Bookable restaurants<br>
+          Transfers &amp; tickets<br>
+          Predictive intelligence
+        </div>
+        <div class="phase-date">2027</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 6mm;">
+    <div style="display: flex; align-items: center; gap: 2mm;">
+      <div style="width: 12%; height: 4mm; background: #FFF000; border-radius: 2mm;"></div>
+      <div style="width: 22%; height: 4mm; background: rgba(255,240,0,0.5); border-radius: 2mm;"></div>
+      <div style="width: 22%; height: 4mm; background: rgba(255,240,0,0.3); border-radius: 2mm;"></div>
+      <div style="width: 22%; height: 4mm; background: rgba(255,240,0,0.2); border-radius: 2mm;"></div>
+      <div style="width: 22%; height: 4mm; background: rgba(255,240,0,0.1); border-radius: 2mm;"></div>
+    </div>
+    <div style="display: flex; margin-top: 1mm;">
+      <div style="width: 12%; text-align: center; font-size: 7pt; opacity: 0.5;">DONE</div>
+      <div style="width: 22%; text-align: center; font-size: 7pt; opacity: 0.5;">TBD</div>
+      <div style="width: 22%; text-align: center; font-size: 7pt; opacity: 0.5;">TBD</div>
+      <div style="width: 22%; text-align: center; font-size: 7pt; opacity: 0.5;">END 2026</div>
+      <div style="width: 22%; text-align: center; font-size: 7pt; opacity: 0.5;">2027</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 12 — STAKEHOLDER ALIGNMENT             -->
+<!-- ============================================ -->
+<div class="slide bg-deep">
+  <div class="label">Stakeholder Alignment</div>
+  <h2>What Every Team Gets</h2>
+
+  <div class="grid-2" style="margin-top: 4mm;">
+    <div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">PRODUCT</h3>
+        <p style="font-size: 10pt;">11 pillars of passenger value from a single booking number. A platform that grows from content to commerce.</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">ENGINEERING</h3>
+        <p style="font-size: 10pt;">Offline-first architecture that works at 35,000 feet with 370 KB of satellite. Single Gemini AI engine.</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">DESIGN</h3>
+        <p style="font-size: 10pt;">One unified experience that feels personal — from boarding to landing. Fallback-first UI.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">DATA</h3>
+        <p style="font-size: 10pt;">Every interaction = a signal. Build the richest passenger profile in LCC aviation.</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">OPERATIONS</h3>
+        <p style="font-size: 10pt;">-15% crew aisle time, -20% food waste, predictive catering from real demand data.</p>
+      </div>
+      <div class="card" style="padding: 4mm 5mm; margin-bottom: 3mm;">
+        <h3 class="accent" style="font-size: 10pt; margin-bottom: 1mm;">LEADERSHIP</h3>
+        <p style="font-size: 10pt;">First-mover advantage. ~27M EUR revenue. A data flywheel. The airline of the future.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 13 — LIVE DEMO                         -->
+<!-- ============================================ -->
+<div class="slide bg-dark" style="justify-content: center; align-items: center; text-align: center;">
+  <div>
+    <div class="label" style="margin-bottom: 10mm;">Live Demo</div>
+
+    <div style="border: 2px solid rgba(255,240,0,0.4); border-radius: 5mm; padding: 10mm 16mm; display: inline-block; margin-bottom: 8mm;">
+      <table style="text-align: left; font-size: 12pt; border: none;">
+        <tr><td style="border: none; padding: 1.5mm 4mm; opacity: 0.6;">Passenger</td><td style="border: none; padding: 1.5mm 4mm; font-weight: 700;">Angel Garcia</td></tr>
+        <tr><td style="border: none; padding: 1.5mm 4mm; opacity: 0.6;">Seat</td><td style="border: none; padding: 1.5mm 4mm; font-weight: 700;">14D</td></tr>
+        <tr><td style="border: none; padding: 1.5mm 4mm; opacity: 0.6;">Flight</td><td style="border: none; padding: 1.5mm 4mm; font-weight: 700;">VY71299</td></tr>
+        <tr><td style="border: none; padding: 1.5mm 4mm; opacity: 0.6;">Route</td><td style="border: none; padding: 1.5mm 4mm; font-weight: 700;">Barcelona &#8594; Rome</td></tr>
+        <tr><td style="border: none; padding: 1.5mm 4mm; opacity: 0.6;">Language</td><td style="border: none; padding: 1.5mm 4mm; font-weight: 700;">Spanish</td></tr>
+      </table>
+    </div>
+
+    <p style="font-size: 13pt; font-style: italic; opacity: 0.8; max-width: 160mm; margin: 0 auto;">
+      "This is the POC. Live. Working. Now imagine: add a pre-order button, a music tab, a FAQ search. That's Phase 1."
+    </p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SLIDE 14 — CLOSING                           -->
+<!-- ============================================ -->
+<div class="slide bg-dark" style="justify-content: center; align-items: center; text-align: center;">
+  <div>
+    <h1 style="font-size: 28pt; font-weight: 300; margin-bottom: 8mm; line-height: 1.4;">
+      Every flight is a canvas.<br>
+      Every passenger is an audience of one.
+    </h1>
+
+    <div style="font-size: 48pt; margin: 6mm 0;">&#9992;</div>
+
+    <p style="font-size: 14pt; font-weight: 400; line-height: 1.6; max-width: 180mm; margin: 0 auto 8mm;">
+      Vueling can be the <strong>first low-cost carrier</strong> to deliver a truly<br>
+      personalized, AI-powered inflight experience at scale.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 4mm; margin: 6mm 0;">
+      <span class="pill">Content</span>
+      <span class="pill">Entertainment</span>
+      <span class="pill">Commerce</span>
+      <span class="pill">Personalization</span>
+    </div>
+
+    <p style="font-size: 11pt; opacity: 0.6; margin-bottom: 10mm;">All from one booking number.</p>
+
+    <div class="card-yellow" style="display: inline-block; padding: 5mm 10mm;">
+      <p style="font-size: 13pt; font-weight: 700;">
+        The POC is proven. The architecture is designed.<br>
+        The business case is clear.
+      </p>
+      <p style="font-size: 14pt; font-weight: 800; margin-top: 3mm; color: #FFF000;">
+        Let's build the future of flying. And let's do it first.
+      </p>
+    </div>
+
+    <div style="margin-top: 12mm; opacity: 0.3; font-size: 10pt; letter-spacing: 3px; text-transform: uppercase;">
+      Vueling Inflight Experience &mdash; MWC Barcelona 2026
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

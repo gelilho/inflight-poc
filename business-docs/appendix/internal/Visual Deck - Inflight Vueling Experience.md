@@ -1,0 +1,637 @@
+# Vueling Inflight Experience
+## Visual Presentation Deck — MWC Barcelona 2026
+
+---
+
+```
+ ██╗   ██╗██╗   ██╗███████╗██╗     ██╗███╗   ██╗ ██████╗
+ ██║   ██║██║   ██║██╔════╝██║     ██║████╗  ██║██╔════╝
+ ██║   ██║██║   ██║█████╗  ██║     ██║██╔██╗ ██║██║  ███╗
+ ╚██╗ ██╔╝██║   ██║██╔══╝  ██║     ██║██║╚██╗██║██║   ██║
+  ╚████╔╝ ╚██████╔╝███████╗███████╗██║██║ ╚████║╚██████╔╝
+   ╚═══╝   ╚═════╝ ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
+
+     I N F L I G H T   E X P E R I E N C E
+```
+
+> _The first AI-powered, end-to-end digital journey for low-cost aviation._
+> _Personalized content. Immersive entertainment. Onboard food ordering._
+> _All from one booking number. From every single passenger._
+
+---
+
+# SLIDE 1 — THE GAP
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║          34 MILLION                    60 MILLION                      ║
+║          PASSENGERS                    HOURS / YEAR                    ║
+║                                                                        ║
+║           ██████████                    ██████████                     ║
+║           ██████████                    ██████████                     ║
+║           ██████████                    ██████████                     ║
+║           ██████████                    ██████████                     ║
+║           ██████████                    ██████████                     ║
+║                                                                        ║
+║                        ZERO ENGAGEMENT                                 ║
+║                        ════════════════                                 ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+**We own the most captive audience in travel — and do nothing with it.**
+
+Passengers bring their own entertainment. They skip food because the ordering process isn't convenient. They land and google everything about their destination on someone else's platform.
+
+---
+
+# SLIDE 2 — THE VISION
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║     BEFORE                      NOW                      AFTER         ║
+║                                                                        ║
+║    ┌──────────┐            ┌──────────┐            ┌──────────┐       ║
+║    │          │            │  ✈  ✈  ✈ │            │          │       ║
+║    │  Bored   │  ──────►   │ VUELING  │  ──────►   │ Engaged  │       ║
+║    │ Passive  │            │ INFLIGHT │            │ Buying   │       ║
+║    │ Offline  │            │EXPERIENCE│            │ Loyal    │       ║
+║    │          │            │          │            │          │       ║
+║    └──────────┘            └──────────┘            └──────────┘       ║
+║                                                                        ║
+║    Dead time                Content +                Revenue +         ║
+║    Zero data                Commerce                 Insights          ║
+║                             Platform                                   ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+**Transform every flight into the best few hours of a passenger's day.**
+
+---
+
+# SLIDE 3 — 11 EXPERIENCE PILLARS
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐       ║
+║  │   COMMERCE      │  │    CONTENT      │  │    UTILITY      │       ║
+║  │   ═══════════   │  │    ═══════════  │  │    ═══════════  │       ║
+║  │                 │  │                 │  │                 │       ║
+║  │  🍽  Food &     │  │  🏛  Discover   │  │  📍 Flight     │       ║
+║  │     Snacks      │  │     Destination │  │     Tracker    │       ║
+║  │                 │  │                 │  │                 │       ║
+║  │  Pre-order.     │  │  🌤  Weather &  │  │  🚆 Getting to │       ║
+║  │  Order onboard. │  │     News        │  │     the City   │       ║
+║  │  Delivered.     │  │                 │  │                 │       ║
+║  │                 │  │  📖 Digital     │  │  🛡  Peace of   │       ║
+║  │                 │  │     Magazine    │  │     Mind       │       ║
+║  │                 │  │                 │  │                 │       ║
+║  └─────────────────┘  │                 │  │  ❓ FAQ &      │       ║
+║                       │                 │  │     Help       │       ║
+║  ┌─────────────────┐  └─────────────────┘  └─────────────────┘       ║
+║  │ ENTERTAINMENT   │                                                  ║
+║  │ ══════════════  │  ┌─────────────────┐                            ║
+║  │                 │  │ PERSONALIZATION │                             ║
+║  │  🎵 Music &    │  │ ═══════════════ │                             ║
+║  │     Audio       │  │                 │                             ║
+║  │                 │  │  ✈  Your       │                             ║
+║  │  AI-curated per │  │     Aircraft   │                             ║
+║  │  destination    │  │                 │                             ║
+║  │                 │  │  👨‍✈️  Your       │                             ║
+║  │                 │  │     Crew       │                             ║
+║  └─────────────────┘  └─────────────────┘                            ║
+║                                                                        ║
+║               ONE APP  ·  ONE BOOKING  ·  ONE EXPERIENCE               ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 4 — THE FOOD REVENUE ENGINE
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║     THE PILLAR THAT PAYS FOR THE ENTIRE PLATFORM                       ║
+║                                                                        ║
+║                                                                        ║
+║  T-24h                    T-3h                     T+15min             ║
+║  DAY BEFORE               AT THE AIRPORT           ONBOARD            ║
+║  ═══════════              ══════════════           ═══════             ║
+║                                                                        ║
+║  ┌───────────┐           ┌───────────┐           ┌───────────┐        ║
+║  │           │           │           │           │           │        ║
+║  │   PUSH    │           │   PUSH    │           │  DIGITAL  │        ║
+║  │   📱      │  ──────►  │   📱      │  ──────►  │   MENU    │        ║
+║  │           │           │           │           │   📱      │        ║
+║  │ "Pre-order│           │ "Add a    │           │           │        ║
+║  │  your     │           │  snack    │           │ Browse    │        ║
+║  │  menu!"   │           │  bag?"    │           │ Tap       │        ║
+║  │           │           │           │           │ Order     │        ║
+║  └─────┬─────┘           └─────┬─────┘           │ Pay       │        ║
+║        │                       │                 │ Delivered │        ║
+║        ▼                       ▼                 └─────┬─────┘        ║
+║  ┌───────────┐           ┌───────────┐                 │              ║
+║  │GUARANTEED │           │  UPSELL   │                 ▼              ║
+║  │ REVENUE   │           │  REVENUE  │           ┌───────────┐        ║
+║  │ before    │           │  at gate  │           │LIVE ORDER │        ║
+║  │ departure │           │           │           │crew       │        ║
+║  └───────────┘           └───────────┘           │delivers   │        ║
+║                                                  └───────────┘        ║
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────┐        ║
+║  │                                                            │        ║
+║  │   +30%  avg. order value (digital menu with photos)        │        ║
+║  │   -20%  food waste (pre-orders = demand signal)            │        ║
+║  │   -15%  crew aisle service time                            │        ║
+║  │   ~27M  EUR/year revenue (8% conversion, conservative)     │        ║
+║  │                                                            │        ║
+║  └────────────────────────────────────────────────────────────┘        ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 5 — THE PASSENGER JOURNEY
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  THE EXPERIENCE DOESN'T START AT BOARDING.                             ║
+║  IT STARTS 24 HOURS BEFORE.                                           ║
+║                                                                        ║
+║                                                                        ║
+║  T-24h ──── BEFORE THE FLIGHT ────────────────────────────────         ║
+║    │                                                                   ║
+║    ├── Silent push: content pre-cached on device (~15-25 MB)           ║
+║    ├── Push: "Flying to Rome tomorrow? Pre-order your menu"            ║
+║    └── Passenger browses menu → orders → pays → "Lunch booked!"       ║
+║         │                                                              ║
+║         ▼                                                              ║
+║  T-3h ──── AT THE AIRPORT ─────────────────────────────────────        ║
+║    │                                                                   ║
+║    ├── After check-in: "Checked in! Explore Rome while you wait"       ║
+║    ├── After luggage drop: "Luggage done! Add a snack bag?"            ║
+║    ├── After security: "You're through! Want a picnic bag?"            ║
+║    └── At the gate: full experience already loaded                     ║
+║         │                                                              ║
+║         ▼                                                              ║
+║  T-0 ──── BOARDING ────────────────────────────────────────────        ║
+║    │                                                                   ║
+║    ├── App: detects WiFi → loads pre-cached experience instantly       ║
+║    ├── WiFi Portal: enter PNR → content from onboard edge cache        ║
+║    └── Welcome: crew names, aircraft, destination, food, music         ║
+║         │                                                              ║
+║         ▼                                                              ║
+║  T+15min ──── CRUISING ───────────────────────────────────────         ║
+║    │                                                                   ║
+║    ├── Browse all content offline: highlights, restaurants, magazine    ║
+║    ├── Pre-orders delivered first, then live orders by seat number     ║
+║    ├── Food ordering live: digital menu → cart → pay → delivered       ║
+║    └── Live flight tracker: real-time map                              ║
+║         │                                                              ║
+║         ▼                                                              ║
+║  T-30min ──── APPROACHING ────────────────────────────────────         ║
+║    │                                                                   ║
+║    ├── "30 minutes to Rome!"                                           ║
+║    ├── Weather on arrival + transport summary + baggage carousel        ║
+║    └── Emergency contacts surfaced                                     ║
+║         │                                                              ║
+║         ▼                                                              ║
+║  LANDING ──── POST-FLIGHT ────────────────────────────────────         ║
+║    │                                                                   ║
+║    ├── "Welcome to Rome! Rate your experience?"                        ║
+║    ├── NPS survey + optional feedback                                  ║
+║    └── Destination guide stays accessible for the entire trip          ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 6 — ARCHITECTURE
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║       OFFLINE-FIRST  ·  PRE-COMPUTED  ·  MINIMAL SATELLITE             ║
+║                                                                        ║
+║                                                                        ║
+║  ┌──────────────────────────────────────────────────────────────┐      ║
+║  │              CONTENT GENERATION (Scheduled)                  │      ║
+║  │                                                              │      ║
+║  │   Destinations  Flights  News   Music  Magazine  FAQ  Menu   │      ║
+║  │   (2 weeks)     (daily)  (6h)  (weekly)(weekly) (on Δ)(wk)  │      ║
+║  │       │           │       │      │       │       │     │     │      ║
+║  └───────┼───────────┼───────┼──────┼───────┼───────┼─────┼─────┘      ║
+║          │           │       │      │       │       │     │            ║
+║          ▼           ▼       ▼      ▼       ▼       ▼     ▼            ║
+║  ┌──────────────────────────────────────────────────────────────┐      ║
+║  │              CONTENT STORE (CDN / Cache)                     │      ║
+║  │                                                              │      ║
+║  │         Single AI Engine: Google Gemini 2.5 Flash            │      ║
+║  │         (highlights, restaurants, weather, news,              │      ║
+║  │          transport, translations — 6 languages)              │      ║
+║  │                                                              │      ║
+║  └───────────────────────┬──────────────────┬───────────────────┘      ║
+║                          │                  │                          ║
+║               ┌──────────┴───┐   ┌──────────┴───────┐                 ║
+║               │ SILENT PUSH  │   │  ONBOARD EDGE    │                 ║
+║               │ App (T-24h)  │   │  CACHE (WiFi)    │                 ║
+║               │ ~15-25 MB    │   │  Ground WiFi     │                 ║
+║               └──────────┬───┘   └──────────┬───────┘                 ║
+║                          │                  │                          ║
+║  ┌───────────────────────┴──────────────────┴───────────────────┐      ║
+║  │              PASSENGER DEVICE                                │      ║
+║  │              App or Browser — content loads instantly         │      ║
+║  └──────────────────────────────┬───────────────────────────────┘      ║
+║                                 │                                      ║
+║  ┌──────────────────────────────┴───────────────────────────────┐      ║
+║  │              SATELLITE (Real-time only)                      │      ║
+║  │                                                              │      ║
+║  │   Flight Tracker    Food Orders     Payments                 │      ║
+║  │   ~1 KB/30s         ~2 KB/order     ~1 KB/txn                │      ║
+║  │                                                              │      ║
+║  │              TOTAL: ~370 KB per flight                       │      ║
+║  │              (Less than a single webpage)                    │      ║
+║  └──────────────────────────────────────────────────────────────┘      ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+### POC Architecture
+
+```
+  ┌──────────────────────┐         ┌──────────────────────────┐
+  │   inflight-ui-poc    │  HTTP   │     inflight-poc          │
+  │   React + Vite       │ ──────► │     FastAPI + Gemini      │
+  │   :3000              │         │     :8000                  │
+  └──────────────────────┘         └──────────────────────────┘
+          │                                   │
+          │ fallback-data.ts                  └── Gemini 2.5 Flash
+          │ (demo never breaks)                   (single AI engine)
+          └───────────────────
+```
+
+---
+
+# SLIDE 7 — THE NUMBERS
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────────┐    ║
+║  │                      ENGAGEMENT                                │    ║
+║  │                                                                │    ║
+║  │   >25%              >12 min              >3                    │    ║
+║  │   activation        session              sections              │    ║
+║  │   rate              duration             explored              │    ║
+║  │   ████████░░        ████████████░        ███░░░░░░░            │    ║
+║  │                                                                │    ║
+║  └────────────────────────────────────────────────────────────────┘    ║
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────────┐    ║
+║  │                       REVENUE                                  │    ║
+║  │                                                                │    ║
+║  │   >8%               +30%                 ~27M EUR              │    ║
+║  │   food pre-order    AOV uplift           Year 1 revenue        │    ║
+║  │   conversion        vs. aisle            (conservative)        │    ║
+║  │   ████████░░        ████████████████     ████████████████████  │    ║
+║  │                                                                │    ║
+║  └────────────────────────────────────────────────────────────────┘    ║
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────────┐    ║
+║  │                    OPERATIONS                                  │    ║
+║  │                                                                │    ║
+║  │   -15%              -20%                 >85%                  │    ║
+║  │   crew aisle        food waste           catering forecast     │    ║
+║  │   time              reduction            accuracy              │    ║
+║  │   ████████████░░░   ██████████████░░     █████████████████░░░  │    ║
+║  │                                                                │    ║
+║  └────────────────────────────────────────────────────────────────┘    ║
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────────┐    ║
+║  │                   SATISFACTION                                 │    ║
+║  │                                                                │    ║
+║  │                  +5 NPS POINTS                                 │    ║
+║  │                  (users vs. non-users)                         │    ║
+║  │                                                                │    ║
+║  └────────────────────────────────────────────────────────────────┘    ║
+║                                                                        ║
+║  COST PER PASSENGER: ~0.005 EUR     ROI: 160x — 240x                  ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 8 — CONTENT CADENCE
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  CONTENT IS NEVER GENERATED PER-REQUEST.                               ║
+║  EVERYTHING IS PRE-COMPUTED ON SCHEDULED CADENCES.                     ║
+║                                                                        ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Every 2 weeks                            ║
+║  │ DESTINATIONS │   Highlights, restaurants, transport                  ║
+║  │ ████████████ │   Translations: 6 languages (es, en, fr, it, ca, gl)║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Daily                                     ║
+║  │ FLIGHT OPS   │   Crew names, aircraft details                       ║
+║  │ ██████       │   Source: Airline operations systems                  ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Every 12 hours                           ║
+║  │ WEATHER      │   3-day forecast per destination                     ║
+║  │ ████████     │   Source: Google Gemini AI                           ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Every 6 hours                            ║
+║  │ NEWS         │   Sports, culture, events — inflight-safe            ║
+║  │ ██████████   │   Source: Google Gemini AI (safety rules in prompt)  ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Weekly                                    ║
+║  │ MUSIC        │   AI-curated playlists per destination               ║
+║  │ ████         │   Local artists, mixed decades, chill vibes          ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: Weekly                                    ║
+║  │ MAGAZINE     │   Digital Ling — travel stories, tips, Vueling news  ║
+║  │ ████         │   Source: Gemini + Editorial                         ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+║  ┌──────────────┐   Refresh: On change                                 ║
+║  │ FAQ          │   Baggage, check-in, loyalty, rebooking              ║
+║  │ ██           │   Source: Vueling systems                            ║
+║  └──────────────┘                                                      ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 9 — HYPERPERSONALIZATION VISION
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║     THE INFLIGHT EXPERIENCE IS NOT JUST A PRODUCT.                     ║
+║     IT'S A DATA FLYWHEEL.                                              ║
+║                                                                        ║
+║                                                                        ║
+║                      ┌─────────────┐                                   ║
+║                      │  PASSENGER  │                                   ║
+║                      │  INTERACTS  │                                   ║
+║                      └──────┬──────┘                                   ║
+║                             │                                          ║
+║                             ▼                                          ║
+║              ┌──────────────────────────┐                              ║
+║              │    PREFERENCE SIGNALS    │                              ║
+║              │                          │                              ║
+║              │  reads  ·  orders  ·     │                              ║
+║              │  plays  ·  searches ·    │                              ║
+║              │  clicks ·  skips         │                              ║
+║              └────────────┬─────────────┘                              ║
+║                           │                                            ║
+║              ┌────────────▼─────────────┐                              ║
+║              │    PERSONALIZATION       │                              ║
+║              │    ENGINE               │                              ║
+║              │                          │                              ║
+║              │  profiles  ·  segments · │                              ║
+║              │  predictions ·  offers   │                              ║
+║              └────────────┬─────────────┘                              ║
+║                           │                                            ║
+║              ┌────────────▼─────────────┐                              ║
+║              │    TAILORED EXPERIENCE   │                              ║
+║              │                          │                              ║
+║              │  "Your usual?"           │                              ║
+║              │  "Welcome back!"         │                              ║
+║              │  Content-first layout    │                              ║
+║              │  Loyalty perks           │                              ║
+║              └────────────┬─────────────┘                              ║
+║                           │                                            ║
+║                           └──────────► (loop back to interaction)      ║
+║                                                                        ║
+║                                                                        ║
+║  ┌────────────────────────────────────────────────────────────────┐    ║
+║  │                                                                │    ║
+║  │  Maria orders Mediterranean    →  Menu: "Your usual?"          │    ║
+║  │  Carlos reads culture articles →  Magazine: culture first      │    ║
+║  │  Family to Mallorca            →  Kids' menu + family content  │    ║
+║  │  10th food order               →  "This one's on us!"          │    ║
+║  │  Monday BCN→MAD business       →  Coffee + news-first layout   │    ║
+║  │                                                                │    ║
+║  └────────────────────────────────────────────────────────────────┘    ║
+║                                                                        ║
+║  TREAT EVERY PASSENGER LIKE A VIP — THROUGH SOFTWARE, NOT HARDWARE.   ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 10 — BUSINESS IMPACT
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐     ║
+║  │     REVENUE      │  │      BRAND       │  │      COST        │     ║
+║  │     ═══════      │  │      ═════       │  │      ════        │     ║
+║  │                  │  │                  │  │                  │     ║
+║  │  ~27M EUR/yr     │  │  FIRST LCC       │  │  0.005 EUR       │     ║
+║  │  food pre-orders │  │  with AI-powered │  │  per passenger   │     ║
+║  │  alone           │  │  inflight        │  │                  │     ║
+║  │                  │  │  experience      │  │  ROI: 160-240x   │     ║
+║  │  Every content   │  │                  │  │                  │     ║
+║  │  card = future   │  │  Long-haul level │  │  Eliminates      │     ║
+║  │  commerce        │  │  experience on   │  │  paper magazine  │     ║
+║  │  touchpoint      │  │  short-haul      │  │                  │     ║
+║  │                  │  │  flights.        │  │  Reduces food    │     ║
+║  │                  │  │                  │  │  waste by 20%    │     ║
+║  └──────────────────┘  └──────────────────┘  └──────────────────┘     ║
+║                                                                        ║
+║  ┌──────────────────┐  ┌──────────────────┐                           ║
+║  │     DATA         │  │   OPERATIONS     │                           ║
+║  │     ════         │  │   ══════════     │                           ║
+║  │                  │  │                  │                           ║
+║  │  Every tap,      │  │  -15% crew       │                           ║
+║  │  every read,     │  │  aisle time      │                           ║
+║  │  every order     │  │                  │                           ║
+║  │  builds a        │  │  Predictive      │                           ║
+║  │  passenger       │  │  catering from   │                           ║
+║  │  profile         │  │  pre-order data  │                           ║
+║  │                  │  │                  │                           ║
+║  └──────────────────┘  └──────────────────┘                           ║
+║                                                                        ║
+║  NORTH STAR: Does the experience make passengers fly more,             ║
+║  spend more, and recommend Vueling more?                               ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 11 — ROADMAP
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  2026                                                         2027     ║
+║  ──────────────────────────────────────────────────────────── ──────   ║
+║                                                                        ║
+║  ┌────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    ║
+║  │  POC   │  │   PHASE 1    │  │   PHASE 2    │  │   PHASE 3    │    ║
+║  │  ████  │  │              │  │              │  │              │    ║
+║  │        │  │  Food pre-   │  │  Music       │  │  Hyper-      │    ║
+║  │ 3 cities│  │  order       │  │  Onboard     │  │  personal-   │    ║
+║  │ 6 langs │  │  Flight      │  │  ordering +  │  │  ization     │    ║
+║  │ UI+API │  │  tracker     │  │  payments    │  │              │    ║
+║  │        │  │  Magazine    │  │  Full route  │  │  Preferences │    ║
+║  │ Feb    │  │  FAQ         │  │  network     │  │  Loyalty     │    ║
+║  │ 2026   │  │  Offline     │  │              │  │  VIP for all │    ║
+║  │        │  │              │  │              │  │              │    ║
+║  │  DONE  │  │  TBD 2026   │  │  TBD 2026   │  │  End 2026   │    ║
+║  └────────┘  └──────────────┘  └──────────────┘  └──────────────┘    ║
+║                                                                        ║
+║                                                    ┌──────────────┐   ║
+║                                                    │   PHASE 4    │   ║
+║                                                    │              │   ║
+║                                                    │  Commerce    │   ║
+║                                                    │  Bookable    │   ║
+║                                                    │  restaurants │   ║
+║                                                    │  Transfers   │   ║
+║                                                    │  Tickets     │   ║
+║                                                    │  Predictive  │   ║
+║                                                    │  intelligence│   ║
+║                                                    │              │   ║
+║                                                    │  2027        │   ║
+║                                                    └──────────────┘   ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 12 — WHO IT SERVES
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  ┌─────────────────────────────────────────────────────────────┐       ║
+║  │                                                             │       ║
+║  │  PRODUCT         A platform of 11 pillars that transforms   │       ║
+║  │                  dead air time into engaged, monetized time  │       ║
+║  │                                                             │       ║
+║  │  ENGINEERING     Offline-first architecture that works at   │       ║
+║  │                  35,000 feet with 370 KB of satellite       │       ║
+║  │                                                             │       ║
+║  │  DESIGN          One unified experience that feels personal │       ║
+║  │                  — from boarding to landing                  │       ║
+║  │                                                             │       ║
+║  │  DATA            Every interaction = a signal. Build the    │       ║
+║  │                  richest passenger profile in LCC aviation  │       ║
+║  │                                                             │       ║
+║  │  OPERATIONS      -15% crew aisle time, -20% food waste,    │       ║
+║  │                  predictive catering from real demand data   │       ║
+║  │                                                             │       ║
+║  │  SUSTAINABILITY  Zero paper magazines, less food waste,     │       ║
+║  │                  smarter catering                           │       ║
+║  │                                                             │       ║
+║  │  LEADERSHIP      First-mover advantage. ~27M EUR revenue.  │       ║
+║  │                  A data flywheel. The airline of the future.│       ║
+║  │                                                             │       ║
+║  └─────────────────────────────────────────────────────────────┘       ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 13 — LIVE DEMO
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║                                                                        ║
+║            ╔═══════════════════════════════════════════╗               ║
+║            ║                                           ║               ║
+║            ║       LIVE DEMO                           ║               ║
+║            ║                                           ║               ║
+║            ║   Passenger:  Angel Garcia                ║               ║
+║            ║   Seat:       14D                         ║               ║
+║            ║   Flight:     VY71299                     ║               ║
+║            ║   Route:      Barcelona → Rome            ║               ║
+║            ║   Language:   Spanish                     ║               ║
+║            ║                                           ║               ║
+║            ║   ┌─────────────────────────────────┐     ║               ║
+║            ║   │                                 │     ║               ║
+║            ║   │   [  LAUNCH EXPERIENCE  ]       │     ║               ║
+║            ║   │                                 │     ║               ║
+║            ║   └─────────────────────────────────┘     ║               ║
+║            ║                                           ║               ║
+║            ╚═══════════════════════════════════════════╝               ║
+║                                                                        ║
+║                                                                        ║
+║   "This is the POC. Live. Working. Now imagine: add a pre-order        ║
+║    button, a music tab, a FAQ search. That's Phase 1."                 ║
+║                                                                        ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+# SLIDE 14 — CLOSING
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║                                                                        ║
+║                                                                        ║
+║              Every flight is a canvas.                                 ║
+║              Every passenger is an audience of one.                    ║
+║                                                                        ║
+║                                                                        ║
+║                         ✈                                              ║
+║                                                                        ║
+║                                                                        ║
+║       Vueling can be the FIRST low-cost carrier to deliver             ║
+║       a truly personalized, AI-powered inflight experience             ║
+║       at scale.                                                        ║
+║                                                                        ║
+║                                                                        ║
+║       Content.  Entertainment.  Commerce.  Personalization.            ║
+║       All from one booking number.                                     ║
+║                                                                        ║
+║                                                                        ║
+║   ┌────────────────────────────────────────────────────────────────┐   ║
+║   │                                                                │   ║
+║   │   The POC is proven. The architecture is designed.             │   ║
+║   │   The business case is clear.                                  │   ║
+║   │                                                                │   ║
+║   │   Let's build the future of flying. And let's do it first.     │   ║
+║   │                                                                │   ║
+║   └────────────────────────────────────────────────────────────────┘   ║
+║                                                                        ║
+║                                                                        ║
+║              VUELING INFLIGHT EXPERIENCE                               ║
+║              MWC BARCELONA 2026                                        ║
+║                                                                        ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+_Vueling Inflight Experience — MWC Barcelona 2026_
